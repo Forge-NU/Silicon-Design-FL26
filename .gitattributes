@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.sh text eol=lf
+bin/* text eol=lf
+*.tcl text eol=lf
+*.il text eol=lf
+*.tgz binary
+*.pdf binary

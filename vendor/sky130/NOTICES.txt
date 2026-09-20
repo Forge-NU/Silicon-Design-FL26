@@ -1,0 +1,20 @@
+Cadence SKY130 release 0.1.0
+Unmodified archive supplied by the user with the accompanying Cadence Public License Version 1.0.
+The full Cadence license is included as its original PDF beside this file.
+Upstream Apache-2.0 model notices also remain inside the archive.
+No endorsement by Cadence, SkyWater or contributors is implied.
+
+Copyright-related lines reproduced from archive text files (preserved verbatim):
+
+# Copyright 2020 The SkyWater PDK Authors
+* Copyright 2020 The SkyWater PDK Authors
+* Copyright 2022 The SkyWater PDK Authors
+\o           (C) 1992-2025  UNIX SYSTEMS Laboratories INC.,
+\o COPYRIGHT (C) 1992-2025  CADENCE DESIGN SYSTEMS INC.  ALL RIGHTS RESERVED.
+
+Also distributed unchanged: sky130_scl_9T_0.1.2.tgz and sky130_die_collateral_1.1.tgz, supplied from the same Cadence download page under the accompanying user-supplied license. Internal notices remain intact, including generated PGV database notices.
+
+Additional copyright-related lines from companion archives:
+# Copyright 2020 The SkyWater PDK Authors
+* The organization, structure, and layout of this file are copyrights
+The organization, structure, and layout of this library are copyrights

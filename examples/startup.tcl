@@ -1,0 +1,2 @@
+puts "FORGE_STARTUP_PASS"
+exit

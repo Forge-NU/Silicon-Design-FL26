@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Execute this script; do not source it. Environment changes stay in this process.
+set -e
+source "$(dirname -- "$0")/../lib/common.sh"
+tool=${1:-help}
+case "$tool" in
+  help|--help|-h)
+    echo 'Usage: bash bin/forge-eda {virtuoso|spectre|innovus|tempus|genus|xrun|hspice|pegasus|qrc|lec} [arguments...]'
+    exit 0;;
+  virtuoso|spectre|innovus|tempus|genus|xrun|hspice|pegasus|qrc|lec) shift;;
+  *) forge_die "Unknown tool: $tool";;
+esac
+forge_workdir
+[[ -r "$FORGE_COURSE_SETUP" ]] || forge_die "Missing course setup: $FORGE_COURSE_SETUP"
+# COE's existing course setup supplies license configuration. Some setup scripts
+# assume a non-strict shell, so source before applying our scoped overrides.
+set +e
+source "$FORGE_COURSE_SETUP"
+setup_rc=$?
+set -e
+[[ $setup_rc == 0 ]] || forge_die "Course setup failed ($setup_rc)."
+export PDKS="$FORGE_CADENCE_ROOT/PDKs"
+# An explicit project launcher selects the PDK after the site's defaults.
+if [[ -n ${FORGE_PDK_ENV:-} ]]; then
+    forge_home_path "$FORGE_PDK_ENV"
+    [[ -f "$FORGE_PDK_ENV" && -O "$FORGE_PDK_ENV" ]] || forge_die 'PDK profile must be a file you own.'
+    source "$FORGE_PDK_ENV"
+fi
+case "$tool" in
+  pegasus|qrc|lec)
+    unset OA_HOME
+    binary=$(command -v "$tool") || forge_die "Site setup does not expose $tool; ask COE for its supported launcher.";;
+  hspice)
+    forge_home_path "$FORGE_HSPICE_ROOT"
+    [[ -r "$FORGE_HSPICE_ROOT/usr/lib/libnsl.so.1" && -r "$FORGE_HSPICE_ROOT/usr/lib/libnspr4.so" ]] || forge_die 'Run scripts/bootstrap-hspice.sh first.'
+    export SNPSLMD_LICENSE_FILE=${FORGE_SYNOPSYS_LICENSE:-${SNPSLMD_LICENSE_FILE:-}}
+    [[ -n "$SNPSLMD_LICENSE_FILE" ]] || forge_die 'Set FORGE_SYNOPSYS_LICENSE in config/local.sh to the authorized server.'
+    export LD_LIBRARY_PATH="$FORGE_HSPICE_ROOT/usr/lib"
+    binary=${FORGE_HSPICE_BINARY:-/ECEnet/Apps1/linux/hspice/hspice/linux/hspice};;
+  virtuoso)
+    binary="$FORGE_CADENCE_ROOT/IC618/tools/dfII/bin/virtuoso"
+    # Avoid stale default CDS.log locks in the user's home. Respect an explicit log.
+    has_log=false
+    for arg in "$@"; do [[ $arg == -log ]] && has_log=true; done
+    if [[ $has_log == false ]]; then set -- -log "$PWD/virtuoso-$(date +%Y%m%d-%H%M%S)-$$.log" "$@"; fi;;
+  spectre) binary="$FORGE_CADENCE_ROOT/SPECTRE231/bin/spectre";;
+  innovus|tempus)
+    forge_home_path "$FORGE_MOTIF_ROOT"
+    [[ -r "$FORGE_MOTIF_ROOT/usr/lib64/libXm.so.4" ]] || forge_die 'Run scripts/bootstrap-motif.sh first.'
+    unset OA_HOME
+    export LD_LIBRARY_PATH="$FORGE_MOTIF_ROOT/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    if [[ $tool == innovus ]]; then binary="$FORGE_CADENCE_ROOT/INNOVUS211/bin/innovus"
+    else binary="$FORGE_CADENCE_ROOT/SSV251/bin/tempus"; fi;;
+  genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/GENUS2110/bin/genus";;
+  xrun)
+    unset OA_HOME LD_LIBRARY_PATH
+    binary="$FORGE_CADENCE_ROOT/XCELIUM2203/tools/bin/xrun"
+    echo 'Note: Xcelium 22.03 crashed at time zero in the September 2026 audit.' >&2;;
+esac
+[[ -x "$binary" ]] || forge_die "Launcher missing or not executable: $binary"
+exec "$binary" "$@"

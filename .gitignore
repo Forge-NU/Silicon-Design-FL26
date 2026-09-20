@@ -1,0 +1,14 @@
+.state/
+results/
+*.rpm
+*.log
+*.err
+*.raw/
+xcelium.d/
+*.bundle
+.env
+config/local.sh
+config/pdk.local.tcl
+build/
+*.vcd
+__pycache__/

@@ -1,0 +1,12 @@
+// Educational level-1 MOS models; NOT any foundry or teaching PDK.
+simulator lang=spectre
+global 0
+VDD (vdd 0) vsource dc=1.8
+VIN (in 0) vsource type=pulse val0=0 val1=1.8 delay=1n rise=100p fall=100p width=4n period=10n
+MN (out in 0 0) n_demo w=1u l=180n
+MP (out in vdd vdd) p_demo w=2u l=180n
+CL (out 0) capacitor c=10f
+model n_demo mos1 type=n vto=0.45 kp=120u lambda=0.04
+model p_demo mos1 type=p vto=-0.45 kp=50u lambda=0.04
+tran1 tran stop=40n maxstep=20p
+save in out vdd
