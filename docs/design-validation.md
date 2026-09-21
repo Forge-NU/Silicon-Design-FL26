@@ -11,7 +11,7 @@ with your sponsor before starting. Use docs/next-steps.md as the acceptance gate
 In a Bash terminal on COE, after the Git setup guide:
 
 ```bash
-export FORGE_REPO="$HOME/forge-silicon-eda"
+export FORGE_REPO="$HOME/Silicon-Design-FL26"
 cd "$FORGE_REPO"
 bash scripts/smoke.sh
 bash scripts/run-counter.sh

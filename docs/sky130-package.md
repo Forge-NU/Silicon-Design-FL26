@@ -20,7 +20,7 @@ https://support.cadence.com/apex/ArticleAttachmentPortal?id=a1Od000000051TqEAI&p
 Clone/update this repository in your home, then run in Bash:
 
 ```bash
-cd "$HOME/forge-silicon-eda"
+cd "$HOME/Silicon-Design-FL26"
 python3 scripts/setup-sky130.py
 bash "$HOME/forge-projects/sky130/launch.sh" virtuoso
 ```
@@ -94,7 +94,7 @@ base 9T and 9T technology OA libraries. LP and HS variants are archived but not
 selected. Use a new project when upgrading from the earlier analog-only setup:
 
 ```bash
-cd "$HOME/forge-silicon-eda"
+cd "$HOME/Silicon-Design-FL26"
 python3 scripts/setup-sky130.py --project "$HOME/forge-projects/sky130-digital"
 ```
 
@@ -121,8 +121,8 @@ export FORGE_PDK_ENV="$HOME/forge-projects/sky130-digital/.forge-sky130/env.sh"
 mkdir -p "$HOME/forge-projects/counter-runs"
 run=$(mktemp -d "$HOME/forge-projects/counter-runs/synth-XXXXXXXX")
 cd "$run"
-bash "$HOME/forge-silicon-eda/bin/forge-eda" genus -batch \
-  -files "$HOME/forge-silicon-eda/examples/counter/synthesize.tcl" >genus.log 2>&1
+bash "$HOME/Silicon-Design-FL26/bin/forge-eda" genus -batch \
+  -files "$HOME/Silicon-Design-FL26/examples/counter/synthesize.tcl" >genus.log 2>&1
 ```
 
 Genus receives FORGE_PDK_CONFIG from the generated profile and the synthesis

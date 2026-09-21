@@ -1,14 +1,14 @@
 # Forge Silicon — COE VLAB setup
 
 Use the Rocky Linux 8 VLAB desktop and a Bash terminal. Put this repository at
-`~/forge-silicon-eda`. Everything installs in your account; no administrator access
+`~/Silicon-Design-FL26`. Everything installs in your account; no administrator access
 or shared-file changes are needed.
 
 ## 1. First-time setup
 
 ```bash
 bash
-cd ~/forge-silicon-eda
+cd ~/Silicon-Design-FL26
 
 # Private graphics library for Virtuoso, Innovus and Tempus; run once.
 bash scripts/bootstrap-motif.sh
@@ -45,7 +45,7 @@ you logged off, so cellviews do not open read-only. Run
 ## 3. Check the tools
 
 ```bash
-cd ~/forge-silicon-eda
+cd ~/Silicon-Design-FL26
 bash scripts/smoke.sh
 bash scripts/run-counter.sh
 ```
@@ -54,6 +54,9 @@ Read the reported logs. If xmsim crashes at time zero with `*F,INTERR`, run
 `getsebool selinuxuser_execheap` and ask IT to enable it on that host (it fixed
 Xcelium 22.03 on rocky8-04, October 2026). Startup checks do not prove that a
 complete design flow works.
+
+The most recent checkout-level verification of this repository on VLAB, with
+the exact commands and results, is recorded in [docs/validation.md](docs/validation.md).
 
 ## Selected versions
 
