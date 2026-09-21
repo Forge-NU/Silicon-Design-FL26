@@ -1,15 +1,15 @@
 # Git setup and team workflow
 
 Git records changes locally. GitHub hosts a shared copy. A local commit does not
-upload anything. This delivery already contains a Git repository on branch main;
-it has no published GitHub remote. The bundle preserves history; the ZIP does not.
+upload anything. This repository is published on branch main at
+<https://github.com/Forge-NU/Silicon-Design-FL26>. Clone it rather than importing
+the original bundle or ZIP, so everyone shares one history.
 
-## 1. Publish the existing repository from Windows
+## 1. Identify yourself to Git
 
-Open PowerShell and run:
+Run this once in your checkout. These settings apply only to this repository.
 
-```powershell
-cd 'C:\Users\marsi\Documents\Codex\2026-09-18\ece7248-setupm-pdf-pdf-eece4525-cadence\outputs\forge-silicon-eda'
+```bash
 git --version
 git status
 git log -3 --oneline
@@ -17,28 +17,9 @@ git config user.name 'YOUR NAME'
 git config user.email 'YOUR GITHUB VERIFIED OR NOREPLY EMAIL'
 ```
 
-Replace the two identity placeholders. These settings apply only to this repo.
-On GitHub, create an **empty private repository** named `forge-silicon-eda` under
-your account or the team's organization. Do not initialize README, license or
-.gitignore: this repository already has history. Add team members through the
-repository access settings. Use private visibility while faculty confirms what
-project material can be shared; private GitHub still is not permission to upload PDKs.
-
-Copy its HTTPS clone URL, replace OWNER below, then run:
-
-```powershell
-git remote -v
-git remote add origin https://github.com/OWNER/forge-silicon-eda.git
-git push -u origin main
-```
-
-If origin already exists, inspect it before changing anything. If it is wrong,
-use `git remote set-url origin URL` with your intended URL. Authenticate using
-Git Credential Manager's browser prompt, or `gh auth login` followed by
-`gh auth setup-git` if using GitHub CLI. GitHub account passwords are not Git
-HTTPS credentials. Never put a token in a remote URL. Refresh GitHub and confirm
-README, docs and examples appear. If push reports non-fast-forward, stop and
-inspect the remote history; do not force-push over someone else's work.
+Ask an organization owner to add you to Forge-NU through the repository access
+settings. Keep the repository private while faculty confirms what project
+material can be shared; private GitHub still is not permission to upload PDKs.
 
 ## 2. Clone on COE VLAB
 
@@ -47,22 +28,25 @@ In the Rocky Linux terminal, enter Bash first if the shell is csh/tcsh:
 ```bash
 bash
 cd "$HOME"
-git clone https://github.com/OWNER/forge-silicon-eda.git
-cd forge-silicon-eda
+git clone https://github.com/Forge-NU/Silicon-Design-FL26.git
+cd Silicon-Design-FL26
 git status
 test -f config/local.sh || cp config/site.example.sh config/local.sh
 ```
 
 Private repositories require authorized authentication. Use an approved SSH key
 or HTTPS credential helper. Do not enable plaintext credential storage on COE.
-If authentication is inconvenient, transfer the bundle through your established
-VLAB file-transfer method and clone it instead:
+Authenticate with `gh auth login` followed by `gh auth setup-git`, or a
+credential helper's browser prompt. GitHub account passwords are not Git HTTPS
+credentials. Never put a token in a remote URL. If authentication is
+inconvenient, transfer a bundle through your established VLAB file-transfer
+method and clone that instead:
 
 ```bash
 cd "$HOME"
-git clone /PATH/TO/forge-silicon-eda.bundle forge-silicon-eda
-cd forge-silicon-eda
-git remote set-url origin https://github.com/OWNER/forge-silicon-eda.git
+git clone /PATH/TO/Silicon-Design-FL26.bundle Silicon-Design-FL26
+cd Silicon-Design-FL26
+git remote set-url origin https://github.com/Forge-NU/Silicon-Design-FL26.git
 ```
 
 Choose one clone method, not both. Each student uses their own home checkout.

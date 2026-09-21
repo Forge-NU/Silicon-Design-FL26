@@ -30,23 +30,14 @@ Use the regular VMware display. Do not use `-nograph` for now. The dedicated log
 
 ## 3. Share the Git repository
 
-Copy `forge-silicon-eda.bundle` to the team or your COE home and run:
+The repository is published at <https://github.com/Forge-NU/Silicon-Design-FL26>. Clone it in your COE home:
 
 ```bash
-git clone forge-silicon-eda.bundle forge-silicon-eda
+cd "$HOME"
+git clone https://github.com/Forge-NU/Silicon-Design-FL26.git
 ```
 
-Or use the supplied source ZIP. To publish on GitHub manually:
-
-1. Create an empty repository in the desired account/organization. Choose visibility deliberately; private is a reasonable starting point. Do not initialize it with another README.
-2. From the local `forge-silicon-eda` Git repository:
-
-```bash
-git remote add origin https://github.com/YOUR-OWNER/forge-silicon-eda.git
-git push -u origin main
-```
-
-3. Invite the team through GitHub's repository access settings. Keep PDKs, proprietary libraries, raw logs, and license files out of Git.
+Ask an organization owner to invite the team through GitHub's repository access settings. Keep PDKs, proprietary libraries, raw logs, and license files out of Git. Full workflow details are in `docs/git-setup.md`.
 
 Each team member should follow README.md to create their own private Motif libraries. The repair directory in the original account is not a shared installation.
 
@@ -74,5 +65,5 @@ The repository's startup tests are intentionally small; they do not establish ta
 - Private 32-bit HSPICE dependencies and successful legacy HSPICE transient simulation.
 - Reproduction of the Xcelium crash and identification of missing Design Compiler files.
 - Local Git repository, reviewed documentation, reusable scripts, mock/syntax checks, and shareable bundle/ZIP.
-
-The full repository workflow has not yet been executed as a fresh VLAB checkout. That is the next inexpensive manual reproducibility check. No GitHub remote has been created.
+- Publication to <https://github.com/Forge-NU/Silicon-Design-FL26> and a fresh VLAB checkout of that repository.
+- Repository-checkout reproducibility run on September 21, 2026: PDK install, smoke test, toy-inverter simulation and counter synthesis. See `docs/validation.md`.

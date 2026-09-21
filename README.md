@@ -1,14 +1,14 @@
 # Forge Silicon — COE VLAB setup
 
 Use the Rocky Linux 8 VLAB desktop and a Bash terminal. Put this repository at
-`~/forge-silicon-eda`. Everything installs in your account; no administrator access
+`~/Silicon-Design-FL26`. Everything installs in your account; no administrator access
 or shared-file changes are needed.
 
 ## 1. First-time setup
 
 ```bash
 bash
-cd ~/forge-silicon-eda
+cd ~/Silicon-Design-FL26
 
 # Private graphics library for Innovus and Tempus; run once.
 bash scripts/bootstrap-motif.sh
@@ -36,14 +36,18 @@ project's `.forge-sky130/paths.json`.
 ## 3. Check the tools
 
 ```bash
-cd ~/forge-silicon-eda
+cd ~/Silicon-Design-FL26
 bash scripts/smoke.sh
 bash scripts/run-counter.sh
 ```
 
 Read the reported logs. **Xcelium 22.03 currently crashes on the audited COE
-image**, so its checks may fail until IT repairs it. Startup checks do not prove
-that a complete design flow works.
+image**, so `run-counter.sh` and the `xrun` row of `smoke.sh` fail until IT
+repairs it; the other four tools pass and `smoke.sh` exits nonzero overall.
+Startup checks do not prove that a complete design flow works.
+
+The most recent checkout-level verification of this repository on VLAB, with
+the exact commands and results, is recorded in [docs/validation.md](docs/validation.md).
 
 ## Selected versions
 
