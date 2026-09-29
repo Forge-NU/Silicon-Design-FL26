@@ -39,6 +39,22 @@ case "$tool" in
     binary=${FORGE_HSPICE_BINARY:-/ECEnet/Apps1/linux/hspice/hspice/linux/hspice};;
   virtuoso)
     binary="$FORGE_CADENCE_ROOT/IC618/tools/dfII/bin/virtuoso"
+    # IC6.1.8 draws its GUI with a bundled Qt 5.9, which sizes text from the X
+    # server's logical DPI. The VLAB VNC desktop advertises 96 through Xft.dpi
+    # while running a denser screen, so menus, forms and the CIW render too
+    # small. Qt's font DPI enlarges text only; it leaves icons and the
+    # fixed-size Cadence dialogs alone, unlike QT_SCALE_FACTOR. Child GUIs such
+    # as ADE, Pegasus and Quantus inherit this.
+    # 144 matches the resolution the VLAB X server reports; set
+    # FORGE_VIRTUOSO_FONT_DPI to change it, or to empty to keep Qt's default.
+    font_dpi=${FORGE_VIRTUOSO_FONT_DPI-144}
+    if [[ -n $font_dpi ]]; then
+        [[ $font_dpi =~ ^[0-9]+$ ]] || forge_die "FORGE_VIRTUOSO_FONT_DPI must be a whole number of DPI: $font_dpi"
+        export QT_FONT_DPI="$font_dpi"
+    fi
+    # Logging off kills Virtuoso before it releases its edit locks, so the next
+    # session would open those cellviews read-only.
+    bash "$forge_repo/scripts/clear-stale-locks.sh" || echo 'Forge EDA: stale-lock check failed; continuing.' >&2
     # Avoid stale default CDS.log locks in the user's home. Respect an explicit log.
     has_log=false
     for arg in "$@"; do [[ $arg == -log ]] && has_log=true; done
