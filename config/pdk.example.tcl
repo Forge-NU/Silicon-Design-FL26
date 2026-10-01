@@ -13,3 +13,7 @@ set power_net REPLACE_POWER_NET
 set ground_net REPLACE_GROUND_NET
 # Record PVT, metal stack, RC corners, model sections and tool compatibility
 # in your private project record. Slow/fast labels alone do not define corners.
+# Clock-tree and filler cells for Innovus (CCOpt does not infer them).
+set cts_buffer_cells [list REPLACE_CLOCK_BUFFERS]
+set cts_inverter_cells [list REPLACE_CLOCK_INVERTERS]
+set filler_cells [list REPLACE_FILLERS_LARGEST_FIRST]

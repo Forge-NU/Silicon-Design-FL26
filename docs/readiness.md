@@ -2,7 +2,9 @@
 
 ## Conclusion
 
-COE VLAB is usable for initial analog design exploration, with functioning Spectre and a recovered legacy HSPICE installation. The user-local repairs also let Innovus and Tempus check out licenses and execute Tcl. Do not yet describe the environment as a validated full digital or mixed-signal flow: Xcelium crashes, Design Compiler is incomplete, and no integrated PDK-based reference design has traversed the complete flow.
+COE VLAB is usable for initial analog design exploration, with functioning Spectre and a recovered legacy HSPICE installation. The user-local repairs also let Innovus and Tempus check out licenses and execute Tcl. Do not yet describe the environment as a validated full digital or mixed-signal flow: Design Compiler is incomplete, and no kit-qualified flow with full DRC/LVS has been run.
+
+**Update, October 1, 2026:** once SELinux `selinuxuser_execheap` was enabled, Xcelium 22.03 stopped crashing. The SKY130 counter has since passed simulation, Genus synthesis, Innovus place-and-route (clean connectivity and in-tool DRC, positive post-route setup and hold), Tempus timing with extracted SPEF, and Conformal equivalence of RTL against the routed netlist.
 
 ## Direct observations in this session
 
@@ -14,7 +16,7 @@ COE VLAB is usable for initial analog design exploration, with functioning Spect
 | Virtuoso IC618 normal VMware display | Dedicated log in the work directory, SKILL restore script, Virtuoso Framework (111) checkout succeeded, `FORGE_VIRTUOSO_PASS`, exit 0. | GUI-mode startup, licensing, and SKILL execution verified September 19. Does not validate schematic/layout editing or a PDK. |
 | Virtuoso IC618 headless test | `-nograph -restore` timed out (124), with stale home-log lock warnings and failure to open its internal Xvnc display. | Headless invocation remains broken/unverified. Normal VMware-display startup passed separately. |
 | HSPICE C-2009.09 SP1, 32-bit | Missing `libnsl.so.1` and `libnspr4.so` resolved privately. Exit 0; listing shows HSPICE license checkout, 2,001 transient points, and token release. | Legacy Synopsys circuit simulation works. Current PrimeSim capability not established. |
-| Xcelium 22.03-s001, 64-bit | Fresh work directory and no inherited `LD_LIBRARY_PATH`; compile/elaboration completes, then `xmsim *F,INTERR: INTERNAL EXCEPTION`, simulation time 0 FS, stream `rts_xfer`; exit 255. | RTL runtime remains broken on the tested desktop. AMS remains unverified. |
+| Xcelium 22.03-s001, 64-bit | Fresh work directory and no inherited `LD_LIBRARY_PATH`; compile/elaboration completes, then `xmsim *F,INTERR: INTERNAL EXCEPTION`, simulation time 0 FS, stream `rts_xfer`; exit 255. | RTL runtime remains broken on the tested desktop. AMS remains unverified. **Update, October 1, 2026:** with SELinux `selinuxuser_execheap` on (rocky8-04), the counter testbench passes all 26 checks and SimVision opens. |
 | XCELIUM2509 directory | Directory exists but is empty. | Not an installed alternative simulator. |
 | Synopsys Design Compiler | Required `compiler/linux/syn/bin/common_shell_exec` does not exist. | Cannot repair the missing vendor installation with an environment variable. |
 | Synopsys license status | SSV251 `lmutil` query returned “Invalid returned data from license server system. (-12,16)”. | Total seats unknown. This does not negate successful HSPICE checkout. |

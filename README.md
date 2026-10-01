@@ -50,8 +50,10 @@ bash scripts/smoke.sh
 bash scripts/run-counter.sh
 ```
 
-Read the reported logs. Startup checks do not prove that a complete design flow
-works.
+Read the reported logs. If xmsim crashes at time zero with `*F,INTERR`, run
+`getsebool selinuxuser_execheap` and ask IT to enable it on that host (it fixed
+Xcelium 22.03 on rocky8-04, October 2026). Startup checks do not prove that a
+complete design flow works.
 
 ## Selected versions
 
@@ -74,8 +76,12 @@ The launchers select these existing COE installations under
 IC26.1 is installed too, but the campus license server only serves Virtuoso
 features up to 25.1, so it fails license checkout. Set
 `FORGE_VIRTUOSO_RELEASE=IC261` in `config/local.sh` once the server offers 26.x
-features. The complete SKY130 flow still needs validation. The generated digital
-manifest supplies library paths; it does not run place-and-route or timing automatically.
+features. Pegasus, Quantus and Conformal use the site's executables when on `PATH`, and
+otherwise the versions above. The generated digital manifest supplies library
+paths and the clock-tree and filler cells; the counter example takes it through
+Genus, Innovus, Tempus and Conformal (see
+[design validation](docs/design-validation.md)). That run used the earlier
+Genus 21.10 / Innovus 21.1 / Xcelium 22.03 tree; rerun it on the versions above.
 
 ## Next steps
 

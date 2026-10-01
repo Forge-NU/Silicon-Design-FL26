@@ -34,11 +34,14 @@ fi
 case "$tool" in
   pegasus|qrc|lec)
     unset OA_HOME
+    # Prefer the site's executable; the EECE7353 setup does not put these on
+    # PATH, so fall back to the installed Pegasus, Quantus and Conformal.
     case "$tool" in
-      pegasus) binary="$FORGE_CADENCE_ROOT/PEGASUS251/bin/pegasus";;
-      qrc) binary="$FORGE_CADENCE_ROOT/QUANTUS261/bin/qrc";;
-      lec) binary="$FORGE_CADENCE_ROOT/CONFRML261/bin/lec";;
-    esac;;
+      pegasus) installed="$FORGE_CADENCE_ROOT/PEGASUS251/bin/pegasus";;
+      qrc) installed="$FORGE_CADENCE_ROOT/QUANTUS261/bin/qrc";;
+      lec) installed="$FORGE_CADENCE_ROOT/CONFRML261/bin/lec";;
+    esac
+    binary=$(command -v "$tool") || binary=$installed;;
   hspice)
     forge_home_path "$FORGE_HSPICE_ROOT"
     [[ -r "$FORGE_HSPICE_ROOT/usr/lib/libnsl.so.1" && -r "$FORGE_HSPICE_ROOT/usr/lib/libnspr4.so" ]] || forge_die 'Run scripts/bootstrap-hspice.sh first.'

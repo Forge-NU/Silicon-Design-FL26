@@ -49,8 +49,8 @@ existing designs are not automatically retargeted.
 | Spectre / ADE | Model path, tt corner and models.scs include | Explicitly verify ADE model selection and generated netlist; no duplicate model includes |
 | Pegasus | Exact DRC/LVS paths, PDK_HOME/PDKDIR/PEGASUS_DRC, corrected techRuleSets overlay | Select decks and design inputs in supported GUI/runset workflow |
 | Quantus | Typical qrcTechFile and extraction setup directory in overlay | Select technology, LVS database, top cell and output format |
-| Xcelium | Project launcher for RTL, which needs no PDK | Existing runtime crash still needs repair; AMS setup is separate |
-| Genus / Innovus / Tempus / Conformal | Base 9T pdk.tcl manifest contains supplied Liberty, technology/cell LEF and Verilog paths | Each flow must source the manifest; synthesis example does so. P&R, equivalence and timing need their reference flow/runsets |
+| Xcelium | Project launcher for RTL, which needs no PDK | Runs when the host has `selinuxuser_execheap` on; AMS setup is separate |
+| Genus / Innovus / Tempus / Conformal | Base 9T pdk.tcl manifest contains supplied Liberty, technology/cell LEF and Verilog paths, plus clock-tree and filler cells | Each flow must source the manifest; the counter's synthesis, place-and-route and timing examples do so. The P&R example is a teaching flow, not the kit's qualified one |
 | PVS / Calibre | No automatic setup | Pegasus decks are not assumed validated interchangeable decks |
 
 For command-line tools:
