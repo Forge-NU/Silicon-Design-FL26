@@ -84,9 +84,9 @@ bash scripts/run-counter.sh
 echo "Counter exit: $?"
 ```
 
-Inspect the reported logs. The counter currently depends on COE fixing the
-recorded Xcelium runtime crash. A compiler banner or successful elaboration is
-not a passing simulation. Expect `FORGE_COUNTER_PASS checks=26` and exit zero.
+Inspect the reported logs. If xmsim crashes at time zero, check
+`getsebool selinuxuser_execheap` on that host (see README). A compiler banner or
+successful elaboration is not a passing simulation. Expect `FORGE_COUNTER_PASS checks=26` and exit zero.
 The smoke test covers startup and small jobs, not a full physical design flow.
 
 ## 4. Make and share changes

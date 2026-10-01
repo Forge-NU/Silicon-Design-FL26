@@ -131,6 +131,11 @@ def main():
         manifest += 'set ' + key + ' ' + ('[list ' + tclpath(value) + ']' if key.startswith('liberty_') or key == 'cell_verilog' else tclpath(value)) + '\n'
     manifest += 'set cell_lefs [list ' + tclpath(base / 'lef/sky130_scl_9T.lef') + ' ' + tclpath(tech / 'lef/sky130_scl_9T_phyCells.lef') + ']\n'
     manifest += 'set placement_site CoreSite\nset power_net VDD\nset ground_net VSS\nset pdk_id sky130_0.1.0_scl_9T_0.1.2\n'
+    # Innovus CCOpt does not pick these up on its own ("CTS found neither
+    # inverters nor buffers"); the kit has no tap or endcap cells.
+    manifest += ('set cts_buffer_cells {CLKBUFX2 CLKBUFX4 CLKBUFX8}\n'
+                 'set cts_inverter_cells {CLKINVX1 CLKINVX2 CLKINVX4 CLKINVX8}\n'
+                 'set filler_cells {FILL64 FILL32 FILL16 FILL8 FILL4 FILL2 FILL1}\n')
     # Only typical RC is supplied; do not invent slow/fast extraction corners.
     env += 'export FORGE_PDK_CONFIG=' + shlex.quote(str(project / '.forge-sky130/pdk.tcl')) + '\n'
     env += 'export FORGE_REPO=' + shlex.quote(str(REPO)) + '\n'

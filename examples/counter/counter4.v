@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module counter4(input clk, input rst_n, input en, output reg [3:0] count);
   always @(posedge clk)
     if (!rst_n) count <= 4'd0;

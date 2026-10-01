@@ -29,7 +29,14 @@ fi
 case "$tool" in
   pegasus|qrc|lec)
     unset OA_HOME
-    binary=$(command -v "$tool") || forge_die "Site setup does not expose $tool; ask COE for its supported launcher.";;
+    # Prefer the site's executable; the EECE7353 setup does not put these on
+    # PATH, so fall back to the installed Pegasus, Quantus and Conformal.
+    case "$tool" in
+      pegasus) installed="$FORGE_CADENCE_ROOT/PEGASUS222/bin/pegasus";;
+      qrc) installed="$FORGE_CADENCE_ROOT/QUANTUS221/bin/qrc";;
+      lec) installed="$FORGE_CADENCE_ROOT/CONFRML241/bin/lec";;
+    esac
+    binary=$(command -v "$tool") || binary=$installed;;
   hspice)
     forge_home_path "$FORGE_HSPICE_ROOT"
     [[ -r "$FORGE_HSPICE_ROOT/usr/lib/libnsl.so.1" && -r "$FORGE_HSPICE_ROOT/usr/lib/libnspr4.so" ]] || forge_die 'Run scripts/bootstrap-hspice.sh first.'
@@ -69,8 +76,7 @@ case "$tool" in
   genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/GENUS2110/bin/genus";;
   xrun)
     unset OA_HOME LD_LIBRARY_PATH
-    binary="$FORGE_CADENCE_ROOT/XCELIUM2203/tools/bin/xrun"
-    echo 'Note: Xcelium 22.03 crashed at time zero in the September 2026 audit.' >&2;;
+    binary="$FORGE_CADENCE_ROOT/XCELIUM2203/tools/bin/xrun";;
 esac
 [[ -x "$binary" ]] || forge_die "Launcher missing or not executable: $binary"
 exec "$binary" "$@"

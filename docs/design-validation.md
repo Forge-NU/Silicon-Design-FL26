@@ -26,8 +26,9 @@ not a PDK, layout or realistic device performance. Inspect toy.log for completed
 transient analysis and zero errors. Plot input and output in the available
 waveform viewer: settled output should invert input, approximately spanning
 0–1.8 V. Do not use these voltage or geometry values for an actual kit without
-checking its specifications. The RTL counter requires the Xcelium runtime fix;
-if it crashes before time advances, retain its log and stop that branch of work.
+checking its specifications. The RTL counter needs a host with SELinux
+`selinuxuser_execheap` on; if xmsim crashes before time advances, retain its log
+and check that boolean before continuing.
 
 ## B. Analog inverter using the actual PDK
 
@@ -167,10 +168,29 @@ constraints actually reached the design. Successful script exit alone is insuffi
     timing scheme. The RTL testbench's fixed #1 sample is not a general signoff
     gate-level timing test. Review SDF annotation and timing-check violations.
 
-Full P&R and Tempus scripts are deliberately not guessed here: the missing
-inputs are the actual kit's qualified power, clock, routing and extraction flow.
-Ask your sponsor for those reference scripts; this counter is the small design
-to run through them. Installed licenses do not supply those process settings.
+For the SKY130 base 9T project, `examples/counter/place_route.tcl` and
+`timing.tcl` run steps 5–7, 9 and 10 in the synthesis build directory. They take
+the clock-tree and filler cells from the project's `pdk.tcl`; Innovus CCOpt
+does not infer them and stops with `IMPCCOPT-1135`. Projects generated before
+these cells were added need a new project or the three `set` lines copied in.
+Post-route timing also requires on-chip-variation analysis, which the script sets.
+
+```bash
+source ~/forge-projects/sky130-9t/.forge-sky130/env.sh
+export FORGE_PDK_ENV=~/forge-projects/sky130-9t/.forge-sky130/env.sh
+cd "$run"   # the Genus build directory from step 3
+bash "$FORGE_REPO/bin/forge-eda" innovus -nowin \
+  -files "$FORGE_REPO/examples/counter/place_route.tcl" -log innovus
+bash "$FORGE_REPO/bin/forge-eda" tempus -no_gui \
+  -files "$FORGE_REPO/examples/counter/timing.tcl" -log tempus
+# Step 11: compare counter4.v with counter4_routed.v using your dofile.
+bash "$FORGE_REPO/bin/forge-eda" lec -XL -nogui -dofile lec.do
+```
+
+Review connectivity.rpt, geometry.rpt, timing_postroute and the tempus_*.rpt
+files. This is a teaching flow: the kit has no tap or endcap cells, and its
+qualified power, routing and extraction flow, plus full Pegasus DRC/LVS (step 8),
+still come from your sponsor.
 
 ## D. AMS only after both branches pass
 

@@ -47,9 +47,11 @@ bash scripts/smoke.sh
 bash scripts/run-counter.sh
 ```
 
-Read the reported logs. **Xcelium 22.03 currently crashes on the audited COE
-image**, so its checks may fail until IT repairs it. Startup checks do not prove
-that a complete design flow works.
+Read the reported logs. Xcelium 22.03 runs once the host's SELinux boolean
+`selinuxuser_execheap` is on (verified on rocky8-04, October 2026); if xmsim
+crashes at time zero with `*F,INTERR`, run `getsebool selinuxuser_execheap` and
+ask IT to enable it on that host. Startup checks do not prove that a complete
+design flow works.
 
 ## Selected versions
 
@@ -62,12 +64,16 @@ The launchers select these existing COE installations; they do not install EDA s
 | Genus | 21.10 |
 | Innovus | 21.1 |
 | Tempus | 25.1 |
-| Xcelium | 22.03 — awaiting runtime repair |
+| Xcelium | 22.03 (needs `selinuxuser_execheap` on) |
+| Conformal LEC | 24.1 |
 | SKY130 PDK / standard cells | 0.1.0 / base 9T 0.1.2 |
 
-Pegasus and Quantus use the site's configured executables. Their exact versions
+Pegasus, Quantus and Conformal use the site's executables when on `PATH`, and
+otherwise PEGASUS222, QUANTUS221 and CONFRML241. Pegasus and Quantus versions
 and the complete SKY130 flow still need validation. The generated digital
-manifest supplies library paths; it does not run place-and-route or timing automatically.
+manifest supplies library paths and the clock-tree and filler cells; the
+counter example takes it through Genus, Innovus, Tempus and Conformal (see
+[design validation](docs/design-validation.md)).
 
 ## Next steps
 

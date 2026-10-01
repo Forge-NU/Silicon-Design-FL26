@@ -54,7 +54,7 @@ Each team member should follow README.md to create their own private Motif libra
 
 Review `docs/coe-it-request.md` and submit it through COE's normal support channel. Highest priorities:
 
-- Repair/update Xcelium: 22.03 crashes at simulation time zero; the 25.09 directory is empty.
+- Finish Xcelium 25.09, whose directory is empty (it would also bring Verisium Debug). 22.03 runs on hosts with `selinuxuser_execheap` on; confirm that boolean is set on every VLAB host.
 - Identify a complete supported Synopsys installation: Design Compiler's required executable is missing.
 - Confirm club license use, supported hosts, and the recommended PDK/library combination.
 
