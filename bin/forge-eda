@@ -39,18 +39,17 @@ case "$tool" in
     binary=${FORGE_HSPICE_BINARY:-/ECEnet/Apps1/linux/hspice/hspice/linux/hspice};;
   virtuoso)
     binary="$FORGE_CADENCE_ROOT/IC618/tools/dfII/bin/virtuoso"
-    # IC6.1.8 draws its GUI with a bundled Qt 5.9, which sizes text from the X
-    # server's logical DPI. The VLAB VNC desktop advertises 96 through Xft.dpi
-    # while running a denser screen, so menus, forms and the CIW render too
-    # small. Qt's font DPI enlarges text only; it leaves icons and the
-    # fixed-size Cadence dialogs alone, unlike QT_SCALE_FACTOR. Child GUIs such
-    # as ADE, Pegasus and Quantus inherit this.
-    # 144 matches the resolution the VLAB X server reports; set
-    # FORGE_VIRTUOSO_FONT_DPI to change it, or to empty to keep Qt's default.
-    font_dpi=${FORGE_VIRTUOSO_FONT_DPI-144}
-    if [[ -n $font_dpi ]]; then
-        [[ $font_dpi =~ ^[0-9]+$ ]] || forge_die "FORGE_VIRTUOSO_FONT_DPI must be a whole number of DPI: $font_dpi"
-        export QT_FONT_DPI="$font_dpi"
+    # IC6.1.8 draws its GUI with a bundled Qt 5.9. The VLAB VNC desktop
+    # advertises 96 DPI through Xft.dpi while running a denser screen, so
+    # menus, forms and the CIW render too small. Virtuoso sets its fonts in
+    # pixels, so QT_FONT_DPI has no visible effect; QT_SCALE_FACTOR scales the
+    # whole GUI, text included. Child GUIs such as ADE, Pegasus and Quantus
+    # inherit this. 1.5 reads comfortably on the 1920x900 VLAB desktop.
+    # Set FORGE_VIRTUOSO_SCALE to change it, or to empty to keep Qt's default.
+    scale=${FORGE_VIRTUOSO_SCALE-1.5}
+    if [[ -n $scale ]]; then
+        [[ $scale =~ ^[0-9]+(\.[0-9]+)?$ ]] || forge_die "FORGE_VIRTUOSO_SCALE must be a number such as 1.5: $scale"
+        export QT_SCALE_FACTOR="$scale"
     fi
     # Logging off kills Virtuoso before it releases its edit locks, so the next
     # session would open those cellviews read-only.

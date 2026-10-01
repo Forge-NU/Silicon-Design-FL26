@@ -33,7 +33,7 @@ Create your design library attached to the SKY130 technology. In ADE, verify
 VLAB graphical session. Detailed model and verification paths are in the
 project's `.forge-sky130/paths.json`.
 
-The launcher enlarges Virtuoso's text (`FORGE_VIRTUOSO_FONT_DPI`, default 144)
+The launcher enlarges Virtuoso's GUI (`FORGE_VIRTUOSO_SCALE`, default 1.5)
 and, before starting, removes edit locks your earlier sessions left behind when
 you logged off, so cellviews do not open read-only. Run
 `bash scripts/clear-stale-locks.sh` in a project to clear them by hand; see

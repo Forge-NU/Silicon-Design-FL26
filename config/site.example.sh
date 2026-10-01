@@ -7,7 +7,7 @@
 # FORGE_MOTIF_ROOT="$HOME/forge_repair_20260918/motif"
 # FORGE_HSPICE_ROOT="$HOME/forge_repair_20260918/hspice32"
 # FORGE_SYNOPSYS_LICENSE=port@authorized-server
-# Virtuoso text size in DPI (default 144; empty keeps Qt's default of 96):
-# FORGE_VIRTUOSO_FONT_DPI=120
+# Virtuoso GUI scale (default 1.5; empty keeps normal size):
+# FORGE_VIRTUOSO_SCALE=1.25
 # Keep edit locks from other hosts when running Virtuoso on two VLAB hosts at once:
 # FORGE_KEEP_REMOTE_LOCKS=1
