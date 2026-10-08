@@ -20,13 +20,10 @@ Keep this terminal for digital work. Use a separate terminal for Virtuoso.
 ```bash
 mkdir -p ~/forge-designs/analog
 cd ~/forge-designs/analog
-source /ECEnet/Apps1/linux/EECE7353/cadence24.sh
-export PDKS=/ECEnet/Apps1/linux/cad2024/tools/PDKs
-/ECEnet/Apps1/linux/cad2024/tools/IC618/tools/dfII/bin/virtuoso \
-  -log "$PWD/virtuoso-$(date +%Y%m%d-%H%M%S).log" &
+bash ~/forge-silicon-eda/bin/forge-eda virtuoso &
 ```
 
-Use the regular VMware display. Do not use `-nograph` for now. The dedicated log avoids old home-directory log locks without deleting them.
+Use the regular VMware display. Do not use `-nograph` for now. The launcher selects IC25.1 from `/ECEnet/Apps1/linux/Cadence` and writes a dedicated log, which avoids old home-directory log locks without deleting them.
 
 ## 3. Share the Git repository
 

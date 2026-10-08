@@ -10,7 +10,7 @@ or shared-file changes are needed.
 bash
 cd ~/forge-silicon-eda
 
-# Private graphics library for Innovus and Tempus; run once.
+# Private graphics library for Virtuoso, Innovus and Tempus; run once.
 bash scripts/bootstrap-motif.sh
 
 # Extract the bundled PDK and base 9T cells; create a project.
@@ -47,26 +47,31 @@ bash scripts/smoke.sh
 bash scripts/run-counter.sh
 ```
 
-Read the reported logs. **Xcelium 22.03 currently crashes on the audited COE
-image**, so its checks may fail until IT repairs it. Startup checks do not prove
-that a complete design flow works.
+Read the reported logs. Startup checks do not prove that a complete design flow
+works.
 
 ## Selected versions
 
-The launchers select these existing COE installations; they do not install EDA software.
+The launchers select these existing COE installations under
+`/ECEnet/Apps1/linux/Cadence`; they do not install EDA software.
 
 | Component | Selected version |
 |---|---|
-| Virtuoso | IC6.1.8 |
-| Spectre | 23.1 |
-| Genus | 21.10 |
-| Innovus | 21.1 |
-| Tempus | 25.1 |
-| Xcelium | 22.03 — awaiting runtime repair |
+| Virtuoso | IC25.1 (`IC251`) |
+| Spectre | 25.1 (`SPECTRE251`) |
+| Genus | 26.1 (`DDI261`) |
+| Innovus | 26.1 (`DDI261`) |
+| Tempus | 25.1 (`SSV251`, still in `cad2024/tools`) |
+| Xcelium | 26.03 (`XCELIUM2603`) |
+| Pegasus | 25.1 (`PEGASUS251`) |
+| Quantus | 26.1 (`QUANTUS261`) |
+| Conformal | 26.1 (`CONFRML261`) |
 | SKY130 PDK / standard cells | 0.1.0 / base 9T 0.1.2 |
 
-Pegasus and Quantus use the site's configured executables. Their exact versions
-and the complete SKY130 flow still need validation. The generated digital
+IC26.1 is installed too, but the campus license server only serves Virtuoso
+features up to 25.1, so it fails license checkout. Set
+`FORGE_VIRTUOSO_RELEASE=IC261` in `config/local.sh` once the server offers 26.x
+features. The complete SKY130 flow still needs validation. The generated digital
 manifest supplies library paths; it does not run place-and-route or timing automatically.
 
 ## Next steps

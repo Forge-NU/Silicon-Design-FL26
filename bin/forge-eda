@@ -11,15 +11,20 @@ case "$tool" in
   *) forge_die "Unknown tool: $tool";;
 esac
 forge_workdir
-[[ -r "$FORGE_COURSE_SETUP" ]] || forge_die "Missing course setup: $FORGE_COURSE_SETUP"
-# COE's existing course setup supplies license configuration. Some setup scripts
-# assume a non-strict shell, so source before applying our scoped overrides.
-set +e
-source "$FORGE_COURSE_SETUP"
-setup_rc=$?
-set -e
-[[ $setup_rc == 0 ]] || forge_die "Course setup failed ($setup_rc)."
-export PDKS="$FORGE_CADENCE_ROOT/PDKs"
+if [[ -n $FORGE_COURSE_SETUP ]]; then
+    [[ -r "$FORGE_COURSE_SETUP" ]] || forge_die "Missing course setup: $FORGE_COURSE_SETUP"
+    # Some setup scripts assume a non-strict shell, so source before applying
+    # our scoped overrides.
+    set +e
+    source "$FORGE_COURSE_SETUP"
+    setup_rc=$?
+    set -e
+    [[ $setup_rc == 0 ]] || forge_die "Course setup failed ($setup_rc)."
+fi
+export LM_LICENSE_FILE="$FORGE_CADENCE_LICENSE" CDS_LIC_FILE="$FORGE_CADENCE_LICENSE"
+# The 2025/2026 releases do not list Rocky 8 as supported; skip the startup OS check.
+export CDS_SKIP_OS_CHECK_ON_STARTUP=1
+export PDKS="$FORGE_PDK_ROOT"
 # An explicit project launcher selects the PDK after the site's defaults.
 if [[ -n ${FORGE_PDK_ENV:-} ]]; then
     forge_home_path "$FORGE_PDK_ENV"
@@ -29,7 +34,11 @@ fi
 case "$tool" in
   pegasus|qrc|lec)
     unset OA_HOME
-    binary=$(command -v "$tool") || forge_die "Site setup does not expose $tool; ask COE for its supported launcher.";;
+    case "$tool" in
+      pegasus) binary="$FORGE_CADENCE_ROOT/PEGASUS251/bin/pegasus";;
+      qrc) binary="$FORGE_CADENCE_ROOT/QUANTUS261/bin/qrc";;
+      lec) binary="$FORGE_CADENCE_ROOT/CONFRML261/bin/lec";;
+    esac;;
   hspice)
     forge_home_path "$FORGE_HSPICE_ROOT"
     [[ -r "$FORGE_HSPICE_ROOT/usr/lib/libnsl.so.1" && -r "$FORGE_HSPICE_ROOT/usr/lib/libnspr4.so" ]] || forge_die 'Run scripts/bootstrap-hspice.sh first.'
@@ -38,8 +47,16 @@ case "$tool" in
     export LD_LIBRARY_PATH="$FORGE_HSPICE_ROOT/usr/lib"
     binary=${FORGE_HSPICE_BINARY:-/ECEnet/Apps1/linux/hspice/hspice/linux/hspice};;
   virtuoso)
-    binary="$FORGE_CADENCE_ROOT/IC618/tools/dfII/bin/virtuoso"
-    # IC6.1.8 draws its GUI with a bundled Qt 5.9. The VLAB VNC desktop
+    vhome="$FORGE_CADENCE_ROOT/$FORGE_VIRTUOSO_RELEASE"
+    binary="$vhome/tools/dfII/bin/virtuoso"
+    # IC25.1 and IC26.1 no longer bundle libXm.so.4, which Rocky 8 lacks.
+    forge_home_path "$FORGE_MOTIF_ROOT"
+    [[ -r "$FORGE_MOTIF_ROOT/usr/lib64/libXm.so.4" ]] || forge_die 'Run scripts/bootstrap-motif.sh first.'
+    export LD_LIBRARY_PATH="$FORGE_MOTIF_ROOT/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export CDSHOME="$vhome" CDS_HOME="$vhome"
+    # ADE, Pegasus and Quantus started from Virtuoso find their tools on PATH.
+    export PATH="$vhome/bin:$vhome/tools/bin:$vhome/tools/dfII/bin:$FORGE_CADENCE_ROOT/SPECTRE251/bin:$FORGE_CADENCE_ROOT/PEGASUS251/bin:$FORGE_CADENCE_ROOT/QUANTUS261/bin:$PATH"
+    # Virtuoso draws its GUI with a bundled Qt. The VLAB VNC desktop
     # advertises 96 DPI through Xft.dpi while running a denser screen, so
     # menus, forms and the CIW render too small. Virtuoso sets its fonts in
     # pixels, so QT_FONT_DPI has no visible effect; QT_SCALE_FACTOR scales the
@@ -58,19 +75,18 @@ case "$tool" in
     has_log=false
     for arg in "$@"; do [[ $arg == -log ]] && has_log=true; done
     if [[ $has_log == false ]]; then set -- -log "$PWD/virtuoso-$(date +%Y%m%d-%H%M%S)-$$.log" "$@"; fi;;
-  spectre) binary="$FORGE_CADENCE_ROOT/SPECTRE231/bin/spectre";;
+  spectre) binary="$FORGE_CADENCE_ROOT/SPECTRE251/bin/spectre";;
   innovus|tempus)
     forge_home_path "$FORGE_MOTIF_ROOT"
     [[ -r "$FORGE_MOTIF_ROOT/usr/lib64/libXm.so.4" ]] || forge_die 'Run scripts/bootstrap-motif.sh first.'
     unset OA_HOME
     export LD_LIBRARY_PATH="$FORGE_MOTIF_ROOT/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    if [[ $tool == innovus ]]; then binary="$FORGE_CADENCE_ROOT/INNOVUS211/bin/innovus"
-    else binary="$FORGE_CADENCE_ROOT/SSV251/bin/tempus"; fi;;
-  genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/GENUS2110/bin/genus";;
+    if [[ $tool == innovus ]]; then binary="$FORGE_CADENCE_ROOT/DDI261/bin/innovus"
+    else binary="$FORGE_CADENCE_LEGACY_ROOT/SSV251/bin/tempus"; fi;;
+  genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/DDI261/bin/genus";;
   xrun)
     unset OA_HOME LD_LIBRARY_PATH
-    binary="$FORGE_CADENCE_ROOT/XCELIUM2203/tools/bin/xrun"
-    echo 'Note: Xcelium 22.03 crashed at time zero in the September 2026 audit.' >&2;;
+    binary="$FORGE_CADENCE_ROOT/XCELIUM2603/tools/bin/xrun";;
 esac
 [[ -x "$binary" ]] || forge_die "Launcher missing or not executable: $binary"
 exec "$binary" "$@"

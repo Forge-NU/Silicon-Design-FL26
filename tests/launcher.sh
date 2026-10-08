@@ -6,20 +6,20 @@ scratch=${1:?Provide a scratch directory inside the workspace}
 mkdir -p "$scratch"
 scratch=$(cd "$scratch" && pwd -P)
 export HOME="$scratch/home"
-mkdir -p "$HOME/design" "$HOME/motif/usr/lib64" "$scratch/vendor/INNOVUS211/bin"
+mkdir -p "$HOME/design" "$HOME/motif/usr/lib64" "$scratch/vendor/DDI261/bin"
 printf 'placeholder\n' > "$HOME/motif/usr/lib64/libXm.so.4"
 export FORGE_CADENCE_ROOT="$scratch/vendor"
 export FORGE_COURSE_SETUP="$scratch/course.sh"
 export FORGE_MOTIF_ROOT="$HOME/motif"
 printf 'export OA_HOME=/incompatible/course/oa\nexport LD_LIBRARY_PATH=/course/lib\n' > "$FORGE_COURSE_SETUP"
-cat > "$scratch/vendor/INNOVUS211/bin/innovus" <<'MOCK'
+cat > "$scratch/vendor/DDI261/bin/innovus" <<'MOCK'
 #!/usr/bin/env bash
 [[ ! ${OA_HOME+x} ]] || exit 21
 [[ $LD_LIBRARY_PATH == "$FORGE_MOTIF_ROOT/usr/lib64:/course/lib" ]] || exit 22
 [[ $# == 2 && $1 == '-files' && $2 == 'file with spaces.tcl' ]] || exit 23
 echo MOCK_PASS
 MOCK
-chmod +x "$scratch/vendor/INNOVUS211/bin/innovus"
+chmod +x "$scratch/vendor/DDI261/bin/innovus"
 export OA_HOME=parent-value
 cd "$HOME/design"
 bash "$repo/bin/forge-eda" innovus -files 'file with spaces.tcl' | grep -q MOCK_PASS
