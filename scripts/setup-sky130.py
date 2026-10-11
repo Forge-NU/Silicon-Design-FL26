@@ -109,8 +109,12 @@ def main():
     cds = ('DEFINE analogLib $CDSHOME/tools/dfII/etc/cdslib/artist/analogLib\n'
            'DEFINE basic $CDSHOME/tools/dfII/etc/cdslib/basic\n'
            'DEFINE sky130_fd_pr_main "' + str(root / 'libs/sky130_fd_pr_main') + '"\n')
-    for lib in ['sky130_scl_9T', 'sky130_scl_9T_tech']:
-        cds += 'DEFINE ' + lib + ' "' + str(scl / lib) + '"\n'
+    # The OpenAccess libraries sit in each collateral directory's oa/ folder.
+    for lib, oa in [('sky130_scl_9T', 'sky130_scl_9T/oa/sky130_scl_9T'),
+                    ('sky130_scl_9T_phyCells', 'sky130_scl_9T_tech/oa/sky130_scl_9T_phyCells')]:
+        if not (scl / oa / 'cdsinfo.tag').is_file():
+            raise ValueError('Missing OpenAccess library: ' + str(scl / oa))
+        cds += 'DEFINE ' + lib + ' "' + str(scl / oa) + '"\n'
     if args.with_mpw:
         cds += 'DEFINE sky130_die_collateral "' + str(mpw / 'sky130_die_collateral') + '"\n'
     def tclpath(p):
