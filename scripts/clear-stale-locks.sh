@@ -27,8 +27,11 @@ process_alive() {
     local pid=$1 created=$2 elapsed
     elapsed=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ') || return 1
     [[ -n $elapsed ]] || return 1
-    # A different start time means the PID now belongs to another process.
-    [[ ! $created =~ ^[0-9]+$ ]] || (( created - (now - elapsed) < 10 && (now - elapsed) - created < 10 ))
+    # A process that started after the lock's recorded creation time is a
+    # reused PID. OpenAccess records that time once Virtuoso initializes it,
+    # which on a loaded VLAB host is often well after the process started, so
+    # a later recorded time does not mean the PID was reused.
+    [[ ! $created =~ ^[0-9]+$ ]] || (( (now - elapsed) - created < 10 ))
 }
 
 roots=("$@")

@@ -18,6 +18,8 @@ sleep 300 & live=$!; trap 'kill $live 2>/dev/null' EXIT
 live_start=$(( $(date +%s) - $(ps -o etimes= -p $live | tr -d ' ') ))
 stake "$proj/Lib/cell/schematic/dead.oa" "$USER" "$host" 999999 1
 stake "$proj/Lib/cell/schematic/live.oa" "$USER" "$host" "$live" "$live_start"
+# OpenAccess can record its creation time long after a slow Virtuoso start.
+stake "$proj/Lib/cell/schematic/slow.oa" "$USER" "$host" "$live" "$((live_start + 60))"
 stake "$proj/Lib/cell/schematic/reused.oa" "$USER" "$host" "$live" 1
 stake "$lib/cell/layout/remote.oa" "$USER" other-vlab-host.coe.neu.edu 1234 1
 stake "$proj/Lib/cell/schematic/other.oa" someone-else "$host" 999999 1
@@ -29,7 +31,7 @@ s="$proj/Lib/cell/schematic"
 for gone in "$s/dead.oa.cdslck" "$s/dead.oa.cdslck.RHEL30.$host.999999" "$s/reused.oa.cdslck" "$lib/cell/layout/remote.oa.cdslck" "$lib/cell/layout/remote.oa.cdslck.RHEL30.other-vlab-host.coe.neu.edu.1234"; do
     [[ ! -e $gone ]] || { echo "FAIL: kept stale $gone"; exit 1; }
 done
-for kept in "$s/live.oa.cdslck" "$s/other.oa.cdslck"; do
+for kept in "$s/live.oa.cdslck" "$s/slow.oa.cdslck" "$s/other.oa.cdslck"; do
     [[ -e $kept ]] || { echo "FAIL: removed $kept"; exit 1; }
 done
 echo 'PASS: dead, reused-PID and remote locks cleared; live and other users'"'"' locks kept.'
