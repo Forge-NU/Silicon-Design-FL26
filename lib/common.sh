@@ -16,6 +16,7 @@ FORGE_COURSE_SETUP=${FORGE_COURSE_SETUP:-}
 FORGE_EDA_STATE=${FORGE_EDA_STATE:-$HOME/.local/share/forge-silicon}
 FORGE_MOTIF_ROOT=${FORGE_MOTIF_ROOT:-$FORGE_EDA_STATE/motif-2.3.4-24.el8_10.x86_64}
 FORGE_HSPICE_ROOT=${FORGE_HSPICE_ROOT:-$FORGE_EDA_STATE/hspice32}
+FORGE_XVFB_ROOT=${FORGE_XVFB_ROOT:-$FORGE_EDA_STATE/xvfb-1.20.11-28.el8_10.3}
 forge_die() { printf 'Forge EDA: %s\n' "$*" >&2; exit 1; }
 forge_home_path() {
     local target home

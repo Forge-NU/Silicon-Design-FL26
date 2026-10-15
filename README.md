@@ -13,6 +13,9 @@ cd ~/forge-silicon-eda
 # Private graphics library for Virtuoso, Innovus and Tempus; run once.
 bash scripts/bootstrap-motif.sh
 
+# Private Xvfb; ADE Explorer will not simulate without it; run once.
+bash scripts/bootstrap-xvfb.sh
+
 # Extract the bundled PDK and base 9T cells; create a project.
 python3 scripts/setup-sky130.py --project ~/forge-projects/sky130-9t
 ```

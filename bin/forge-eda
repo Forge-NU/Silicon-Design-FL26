@@ -54,6 +54,17 @@ case "$tool" in
     [[ -r "$FORGE_MOTIF_ROOT/usr/lib64/libXm.so.4" ]] || forge_die 'Run scripts/bootstrap-motif.sh first.'
     export LD_LIBRARY_PATH="$FORGE_MOTIF_ROOT/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     export CDSHOME="$vhome" CDS_HOME="$vhome"
+    # ADE Explorer will not simulate without Xvfb (EXPLORER-9512). It looks in
+    # /usr/bin, or in the directory CDS_XVFB_PATH names, for an Xvfb binary.
+    # Virtuoso still opens without it, so only warn.
+    if [[ ! -x /usr/bin/Xvfb && -z ${CDS_XVFB_PATH:-} ]]; then
+        forge_home_path "$FORGE_XVFB_ROOT"
+        if [[ -x "$FORGE_XVFB_ROOT/usr/bin/Xvfb" ]]; then
+            export CDS_XVFB_PATH="$FORGE_XVFB_ROOT/usr/bin"
+        else
+            echo 'Forge EDA: Xvfb not found; ADE simulations will fail. Run scripts/bootstrap-xvfb.sh.' >&2
+        fi
+    fi
     # ADE, Pegasus and Quantus started from Virtuoso find their tools on PATH.
     export PATH="$vhome/bin:$vhome/tools/bin:$vhome/tools/dfII/bin:$FORGE_CADENCE_ROOT/SPECTRE251/bin:$FORGE_CADENCE_ROOT/PEGASUS251/bin:$FORGE_CADENCE_ROOT/QUANTUS261/bin:$PATH"
     # Virtuoso draws its GUI with a bundled Qt. The VLAB VNC desktop
