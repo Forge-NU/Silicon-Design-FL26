@@ -100,6 +100,11 @@ case "$tool" in
   genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/DDI261/bin/genus";;
   xrun)
     unset OA_HOME LD_LIBRARY_PATH
+    # SimVision otherwise starts its 32-bit build, and Rocky 8 hosts have no
+    # 32-bit libX11. The 64-bit build needs only system libraries.
+    export CDS_AUTO_64BIT=ALL
+    # Project cds.lib files define analogLib and basic under $CDSHOME.
+    export CDSHOME="$FORGE_CADENCE_ROOT/$FORGE_VIRTUOSO_RELEASE"
     binary="$FORGE_CADENCE_ROOT/XCELIUM2603/tools/bin/xrun";;
 esac
 [[ -x "$binary" ]] || forge_die "Launcher missing or not executable: $binary"
