@@ -20,7 +20,7 @@ Keep this terminal for digital work. Use a separate terminal for Virtuoso.
 ```bash
 mkdir -p ~/forge-designs/analog
 cd ~/forge-designs/analog
-bash ~/forge-silicon-eda/bin/forge-eda virtuoso &
+bash ~/Silicon-Design-FL26/bin/forge-eda virtuoso &
 ```
 
 Use the regular VMware display. Do not use `-nograph` for now. The launcher selects IC25.1 from `/ECEnet/Apps1/linux/Cadence` and writes a dedicated log, which avoids old home-directory log locks without deleting them.
