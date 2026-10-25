@@ -1,0 +1,42 @@
+// Digital half of Lab 1. Top level is Verilog-AMS so it can also own the
+// analog supply. Signals cross domains in both directions:
+//   a  : reg (logic)       -> inverter gate (electrical)  => L2E connect module
+//   y  : inverter drain    -> wire read by checker (logic) => E2L connect module
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module tb_inv;
+  reg  a_drv = 1'b0;
+  wire a = a_drv;          // SPICE ports are inout: they need a net, not a reg
+  wire y;
+  electrical vdd, vss;
+  ground vss;
+  integer checks = 0, errors = 0;
+
+  // Spectre primitives can be instantiated directly from Verilog-AMS.
+  vsource #(.type("dc"), .dc(1.8)) VDD (vdd, vss);
+
+  inv_sky130 XINV (.a(a), .y(y), .vdd(vdd), .vss(vss));
+
+  task drive_and_check(input reg value);
+    begin
+      a_drv = value;
+      #4;                                   // let the analog output settle
+      checks = checks + 1;
+      if (y !== ~value) errors = errors + 1;
+      $display("check %0d: a=%b y=%b Vy=%0.3f V", checks, value, y,
+               $cds_get_analog_value("tb_inv.XINV.y"));
+    end
+  endtask
+
+  initial begin
+    #2;
+    repeat (4) begin
+      drive_and_check(1'b1);
+      drive_and_check(1'b0);
+    end
+    if (errors == 0) $display("FORGE_AMS_INV_PASS checks=%0d", checks);
+    else $display("FORGE_AMS_INV_FAIL errors=%0d of %0d checks", errors, checks);
+    $finish;
+  end
+endmodule

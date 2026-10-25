@@ -1,0 +1,20 @@
+// AMS control file: pass it to xrun alongside the HDL sources. It is a Spectre
+// netlist plus one "amsd" block that tells AMS Designer how the two domains meet.
+simulator lang=spectre
+
+include "models.scs"          // SKY130 tt models, written by run-ams.sh
+include "inv.scs"             // the analog cell
+
+tran1 tran stop=40n           // analog engine's analysis; the digital $finish ends sooner
+save tb_inv.XINV.y tb_inv.XINV.a tb_inv.vdd
+
+amsd {
+  // Let Verilog instantiate the Spectre subckt by name, ports matched by name.
+  portmap subckt=inv_sky130
+  config  cell=inv_sky130 use=spice
+
+  // Interface elements (connect modules) for a 1.8 V logic domain:
+  // L2E drives 0/1.8 V with 100 ps edges through rlo/rhi;
+  // E2L reads 1 above vthi, 0 below vtlo, X in between.
+  ie vsup=1.8 tr=100p tf=100p rlo=200 rhi=200 vthi=1.2 vtlo=0.6
+}

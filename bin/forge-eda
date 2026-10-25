@@ -5,9 +5,9 @@ source "$(dirname -- "$0")/../lib/common.sh"
 tool=${1:-help}
 case "$tool" in
   help|--help|-h)
-    echo 'Usage: bash bin/forge-eda {virtuoso|spectre|innovus|tempus|genus|xrun|hspice|pegasus|qrc|lec} [arguments...]'
+    echo 'Usage: bash bin/forge-eda {virtuoso|spectre|innovus|tempus|genus|xrun|simvision|hspice|pegasus|qrc|lec} [arguments...]'
     exit 0;;
-  virtuoso|spectre|innovus|tempus|genus|xrun|hspice|pegasus|qrc|lec) shift;;
+  virtuoso|spectre|innovus|tempus|genus|xrun|simvision|hspice|pegasus|qrc|lec) shift;;
   *) forge_die "Unknown tool: $tool";;
 esac
 forge_workdir
@@ -98,14 +98,14 @@ case "$tool" in
     if [[ $tool == innovus ]]; then binary="$FORGE_CADENCE_ROOT/DDI261/bin/innovus"
     else binary="$FORGE_CADENCE_LEGACY_ROOT/SSV251/bin/tempus"; fi;;
   genus) unset OA_HOME; binary="$FORGE_CADENCE_ROOT/DDI261/bin/genus";;
-  xrun)
+  xrun|simvision)
     unset OA_HOME LD_LIBRARY_PATH
     # SimVision otherwise starts its 32-bit build, and Rocky 8 hosts have no
     # 32-bit libX11. The 64-bit build needs only system libraries.
     export CDS_AUTO_64BIT=ALL
     # Project cds.lib files define analogLib and basic under $CDSHOME.
     export CDSHOME="$FORGE_CADENCE_ROOT/$FORGE_VIRTUOSO_RELEASE"
-    binary="$FORGE_CADENCE_ROOT/XCELIUM2603/tools/bin/xrun";;
+    binary="$FORGE_CADENCE_ROOT/XCELIUM2603/tools/bin/$tool";;
 esac
 [[ -x "$binary" ]] || forge_die "Launcher missing or not executable: $binary"
 exec "$binary" "$@"

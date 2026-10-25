@@ -90,6 +90,8 @@ Genus 21.10 / Innovus 21.1 / Xcelium 22.03 tree; rerun it on the versions above.
 
 - [Run counter synthesis and configure DRC/LVS/extraction](docs/sky130-package.md).
 - [Validate the inverter and digital counter](docs/design-validation.md).
+- [Learn mixed-signal (AMS) co-simulation](docs/ams-cosim.md): command-line
+  labs (`scripts/run-ams.sh lab1|lab2`) and a Virtuoso/ADE walkthrough.
 - [Set up Git and share changes](docs/git-setup.md).
 
 Keep the supplied PDK archives and license notices together in Git. Extracted

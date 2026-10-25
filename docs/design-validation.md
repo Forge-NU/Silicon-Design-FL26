@@ -194,6 +194,9 @@ still come from your sponsor.
 
 ## D. AMS only after both branches pass
 
+Worked labs and a menu-by-menu Virtuoso walkthrough are in
+[ams-cosim.md](ams-cosim.md).
+
 Start with one digital stimulus signal driving the verified analog inverter and
 one analog output observed by a digital checker. Use the PDK-supported simulator
 config, bind analog cells to Spectre and digital cells to HDL, and select the

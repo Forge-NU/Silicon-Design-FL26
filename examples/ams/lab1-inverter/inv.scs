@@ -1,0 +1,12 @@
+// Analog half of Lab 1: a SKY130 CMOS inverter as a Spectre subcircuit.
+// AMS Designer binds the Verilog instance "inv_sky130" to this subckt
+// (see the portmap/config cards in amscf.scs). Models come from models.scs,
+// which scripts/run-ams.sh writes from the project's FORGE_SKY130_MODEL.
+simulator lang=spectre
+
+subckt inv_sky130 (a y vdd vss)
+  MP (y a vdd vdd) pfet_01v8 w=2u l=150n
+  MN (y a vss vss) nfet_01v8 w=1u l=150n
+  // Fixed load so edges look like a real fanout, not just the connect module.
+  CL (y vss) capacitor c=20f
+ends inv_sky130

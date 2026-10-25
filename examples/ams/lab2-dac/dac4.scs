@@ -1,0 +1,33 @@
+// Analog half of Lab 2: a 4-bit R-2R DAC. Each code bit is buffered by two
+// SKY130 inverters so the ladder sees clean 0 V / VDD levels, then
+// vout = VDD * code / 16. The bus port d<3:0> uses Virtuoso's <> bus
+// notation, which is what an ADE netlist of a schematic would contain.
+simulator lang=spectre
+
+subckt drv_inv (a y vdd vss)
+  MP (y a vdd vdd) pfet_01v8 w=4u l=150n
+  MN (y a vss vss) nfet_01v8 w=2u l=150n
+ends drv_inv
+
+subckt dac4 (d\<3\> d\<2\> d\<1\> d\<0\> vout vdd vss)
+  parameters r=20k
+  // Bit buffers: d -> nX (inverted) -> bX (restored, full swing)
+  XI0A (d\<0\> n0 vdd vss) drv_inv
+  XI0B (n0 b0 vdd vss) drv_inv
+  XI1A (d\<1\> n1 vdd vss) drv_inv
+  XI1B (n1 b1 vdd vss) drv_inv
+  XI2A (d\<2\> n2 vdd vss) drv_inv
+  XI2B (n2 b2 vdd vss) drv_inv
+  XI3A (d\<3\> n3 vdd vss) drv_inv
+  XI3B (n3 b3 vdd vss) drv_inv
+  // R-2R ladder, LSB at node l0, MSB node is the output.
+  RT  (l0 vss)  resistor r=2*r
+  RB0 (b0 l0)   resistor r=2*r
+  R01 (l0 l1)   resistor r=r
+  RB1 (b1 l1)   resistor r=2*r
+  R12 (l1 l2)   resistor r=r
+  RB2 (b2 l2)   resistor r=2*r
+  R23 (l2 vout) resistor r=r
+  RB3 (b3 vout) resistor r=2*r
+  CL  (vout vss) capacitor c=100f
+ends dac4

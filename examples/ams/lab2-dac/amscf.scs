@@ -1,0 +1,15 @@
+// AMS control file for Lab 2 (pass it to xrun alongside the HDL sources).
+simulator lang=spectre
+
+include "models.scs"          // SKY130 tt models, written by run-ams.sh
+include "dac4.scs"
+
+tran1 tran stop=1u            // longer than the testbench; $finish ends the run
+save tb_dac.vout tb_dac.XDAC.b3 tb_dac.XDAC.b0
+
+amsd {
+  // autobus/busdelim let Verilog's count[3:0] bind to the subckt's d<3>..d<0>.
+  portmap subckt=dac4 autobus=yes busdelim="<>"
+  config  cell=dac4 use=spice
+  ie vsup=1.8 tr=100p tf=100p vthi=1.2 vtlo=0.6
+}
