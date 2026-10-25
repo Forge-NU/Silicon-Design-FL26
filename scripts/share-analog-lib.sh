@@ -23,17 +23,6 @@ if [[ ${1:-} == --dry-run ]]; then dry=1; shift; fi
 run() { if (( dry )); then echo "would: $*"; else "$@"; fi; }
 die() { echo "share-analog-lib: $*" >&2; exit 1; }
 
-src=$(realpath -e -- "$1" 2>/dev/null) || die "no such directory: $1"
-name=$(basename -- "$src")
-dest="$repo/analog/libs/$name"
-
-[[ -d $src && -f $src/cdsinfo.tag ]] || die "$src is not a Virtuoso library (no cdsinfo.tag)"
-[[ $name =~ ^[A-Za-z][A-Za-z0-9_]*$ ]] || die "library name '$name' must be letters, digits and _"
-[[ $src != "$repo/"* ]] || die "$src is already inside the repository"
-[[ ! -e $dest ]] || die "analog/libs/$name already exists; rename your library or pick another name"
-! grep -qE "^DEFINE[[:space:]]+$name[[:space:]]" "$shared" ||
-    die "analog/cds.lib already defines $name; library names must be unique across the team"
-
 # Turn a cds.lib path (quoted, relative, $HOME or $VAR) into an absolute path.
 resolve() {
     local p=$1 base=$2 var
@@ -45,6 +34,49 @@ resolve() {
     [[ $p == /* ]] || p="$base/$p"
     realpath -m -- "$p"
 }
+
+# A library folder has cdsinfo.tag, or .oalib when made by Stream In / DEF In.
+is_lib() { [[ -f $1/cdsinfo.tag || -f $1/.oalib ]]; }
+
+# Print "name path" for each library a cds.lib defines inside your home.
+libs_in() {
+    local cdslib=$1 keyword lname lpath _
+    while read -r keyword lname lpath _; do
+        [[ $keyword == DEFINE && -n ${lpath:-} ]] || continue
+        lpath=$(resolve "$lpath" "$(dirname -- "$cdslib")")
+        [[ $lpath == "$HOME/"* && $lpath != */.local/share/* ]] && is_lib "$lpath" &&
+            echo "  $lname    $lpath"
+    done < "$cdslib"
+}
+
+src=$(realpath -e -- "$1" 2>/dev/null) || die "no such directory: $1"
+if [[ ! -d $src ]] || ! is_lib "$src"; then
+    msg="$src is not a Virtuoso library folder."
+    up=$(dirname -- "$src")
+    while [[ $up == "$HOME/"* ]] && ! is_lib "$up"; do up=$(dirname -- "$up"); done
+    if [[ $up == "$HOME/"* ]]; then
+        msg+=" It is inside library $(basename -- "$up"); pass the library folder:
+  bash scripts/share-analog-lib.sh $up"
+    elif [[ -f $src/cds.lib ]]; then
+        found=$(libs_in "$src/cds.lib")
+        if [[ -n $found ]]; then
+            msg+=" That looks like a project folder; pass one of its libraries:
+$found"
+        else
+            msg+=" That looks like a project folder, but its cds.lib defines no libraries of yours."
+        fi
+    else
+        msg+=" Pass the folder named after the library (it holds the cell folders)."
+    fi
+    die "$msg"
+fi
+name=$(basename -- "$src")
+dest="$repo/analog/libs/$name"
+[[ $name =~ ^[A-Za-z][A-Za-z0-9_]*$ ]] || die "library name '$name' must be letters, digits and _"
+[[ $src != "$repo/"* ]] || die "$src is already inside the repository"
+[[ ! -e $dest ]] || die "analog/libs/$name already exists; rename your library or pick another name"
+! grep -qE "^DEFINE[[:space:]]+$name[[:space:]]" "$shared" ||
+    die "analog/cds.lib already defines $name; library names must be unique across the team"
 
 # Refuse to move a library someone has open: clear only dead sessions' locks.
 (( dry )) || bash "$repo/scripts/clear-stale-locks.sh" "$src"
@@ -58,6 +90,10 @@ fi
 project_lib="$(dirname -- "$src")/cds.lib"
 
 run mv -- "$src" "$dest"
+if [[ ! -f $src/cdsinfo.tag && ! -f $dest/cdsinfo.tag ]]; then
+    if (( dry )); then echo "would: add cdsinfo.tag (library has only .oalib)"
+    else printf 'CDSLIBRARY\nDMTYPE none\nNAMESPACE LibraryUnix\n' > "$dest/cdsinfo.tag"; fi
+fi
 if (( dry )); then echo "would: append 'DEFINE $name libs/$name' to $shared"
 else printf 'DEFINE %s libs/%s\n' "$name" "$name" >> "$shared"; fi
 

@@ -10,7 +10,7 @@ while read -r name path; do
   [[ -n $name ]] || continue
   if [[ $path != "libs/$name" ]]; then
     echo "cds.lib: use 'DEFINE $name libs/$name' (relative), not '$path'"; status=1
-  elif [[ ! -f libs/$name/cdsinfo.tag ]]; then
+  elif [[ ! -f libs/$name/cdsinfo.tag && ! -f libs/$name/.oalib ]]; then
     echo "cds.lib: $name is listed but libs/$name is not a Virtuoso library"; status=1
   fi
 done <<< "$declared"
