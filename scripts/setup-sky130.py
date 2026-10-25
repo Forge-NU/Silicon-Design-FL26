@@ -117,6 +117,9 @@ def main():
         cds += 'DEFINE ' + lib + ' "' + str(scl / oa) + '"\n'
     if args.with_mpw:
         cds += 'DEFINE sky130_die_collateral "' + str(mpw / 'sky130_die_collateral') + '"\n'
+    # Shared libraries live in the repository; personal scratch libraries
+    # created in Library Manager are added below this line, in the project.
+    cds += 'SOFTINCLUDE "' + str(REPO / 'analog/cds.lib') + '"\n'
     def tclpath(p):
         return '{' + str(p) + '}'
     base = scl / 'sky130_scl_9T'

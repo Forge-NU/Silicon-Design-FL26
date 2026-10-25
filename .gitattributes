@@ -5,3 +5,9 @@ bin/* text eol=lf
 *.il text eol=lf
 *.tgz binary
 *.pdf binary
+# OpenAccess databases cannot be merged; one person edits a cell at a time.
+*.oa binary
+*.dm binary
+master.tag text eol=lf
+cdsinfo.tag text eol=lf
+analog/cds.lib text eol=lf

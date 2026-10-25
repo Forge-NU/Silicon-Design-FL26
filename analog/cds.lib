@@ -1,0 +1,5 @@
+-- Shared Virtuoso libraries tracked in Git.
+-- Each project's cds.lib includes this file (SOFTINCLUDE), so every library
+-- listed here appears in Library Manager. Paths are relative to this file.
+-- Add one line per library you put under analog/libs:
+--   DEFINE <LibName> libs/<LibName>

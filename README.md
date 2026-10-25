@@ -31,7 +31,9 @@ project name; the setup script preserves existing files.
 bash ~/forge-projects/sky130-9t/launch.sh virtuoso
 ```
 
-Create your design library attached to the SKY130 technology. In ADE, verify
+Create your design library attached to the SKY130 technology. Keep
+shared work under `analog/libs` in this repository; see
+[analog/README.md](analog/README.md). In ADE, verify
 `models/sky130.lib.spice` from the installed PDK, section `tt`. Use the normal
 VLAB graphical session. Detailed model and verification paths are in the
 project's `.forge-sky130/paths.json`.
@@ -91,6 +93,7 @@ Genus 21.10 / Innovus 21.1 / Xcelium 22.03 tree; rerun it on the versions above.
 - [Run counter synthesis and configure DRC/LVS/extraction](docs/sky130-package.md).
 - [Validate the inverter and digital counter](docs/design-validation.md).
 - [Set up Git and share changes](docs/git-setup.md).
+- [Share Virtuoso libraries through the repository](analog/README.md).
 
 Keep the supplied PDK archives and license notices together in Git. Extracted
 PDKs and design runs stay in your home outside the repository. MPW collateral is

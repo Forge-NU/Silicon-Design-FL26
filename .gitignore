@@ -12,3 +12,13 @@ config/pdk.local.tcl
 build/
 *.vcd
 __pycache__/
+# Virtuoso runtime files inside analog/libs; commit the .oa, .tag, data.dm,
+# .oalib and maestro.sdb files, not locks or simulation results.
+*.cdslck
+*.cdslck.*
+.cadence/
+analog/libs/**/maestro/results/
+analog/libs/**/maestro/history/
+analog/libs/**/maestro/.running
+analog/libs/**/adexl/results/
+analog/libs/**/adexl/history/
