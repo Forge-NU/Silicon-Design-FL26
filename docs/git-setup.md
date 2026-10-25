@@ -34,6 +34,15 @@ git status
 test -f config/local.sh || cp config/site.example.sh config/local.sh
 ```
 
+To push without typing credentials, switch the checkout to SSH. The script
+asks for your GitHub username, name and email, creates a key, shows it for
+you to add to GitHub from your own PC (screenshot it and convert the image to
+text), checks that GitHub accepts it, and changes the remote to SSH:
+
+```bash
+bash scripts/setup-github-ssh.sh
+```
+
 Private repositories require authorized authentication. Use an approved SSH key
 or HTTPS credential helper. Do not enable plaintext credential storage on COE.
 Authenticate with `gh auth login` followed by `gh auth setup-git`, or a
