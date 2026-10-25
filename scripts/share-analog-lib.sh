@@ -23,17 +23,7 @@ if [[ ${1:-} == --dry-run ]]; then dry=1; shift; fi
 run() { if (( dry )); then echo "would: $*"; else "$@"; fi; }
 die() { echo "share-analog-lib: $*" >&2; exit 1; }
 
-# Turn a cds.lib path (quoted, relative, $HOME or $VAR) into an absolute path.
-resolve() {
-    local p=$1 base=$2 var
-    p=${p%\"}; p=${p#\"}
-    while [[ $p =~ \$\{?([A-Za-z_][A-Za-z0-9_]*)\}? ]]; do
-        var=${BASH_REMATCH[1]}
-        p=${p/"${BASH_REMATCH[0]}"/${!var:-}}
-    done
-    [[ $p == /* ]] || p="$base/$p"
-    realpath -m -- "$p"
-}
+source "$repo/lib/cdslib.sh"
 
 # A library folder has cdsinfo.tag, or .oalib when made by Stream In / DEF In.
 is_lib() { [[ -f $1/cdsinfo.tag || -f $1/.oalib ]]; }
@@ -41,9 +31,9 @@ is_lib() { [[ -f $1/cdsinfo.tag || -f $1/.oalib ]]; }
 # Print "name path" for each library a cds.lib defines inside your home.
 libs_in() {
     local cdslib=$1 keyword lname lpath _
-    while read -r keyword lname lpath _; do
+    while read -r keyword lname lpath _ || [[ -n ${keyword:-} ]]; do
         [[ $keyword == DEFINE && -n ${lpath:-} ]] || continue
-        lpath=$(resolve "$lpath" "$(dirname -- "$cdslib")")
+        lpath=$(cdslib_resolve "$lpath" "$(dirname -- "$cdslib")")
         [[ $lpath == "$HOME/"* && $lpath != */.local/share/* ]] && is_lib "$lpath" &&
             echo "  $lname    $lpath"
     done < "$cdslib"
@@ -101,15 +91,12 @@ if [[ -f $project_lib ]]; then
     base=$(dirname -- "$project_lib")
     new=$(mktemp)
     removed=0 included=0
+    ! cdslib_includes "$project_lib" "$shared" || included=1
     while IFS= read -r line || [[ -n $line ]]; do
         read -r keyword arg1 arg2 _ <<< "$line" || true
         if [[ $keyword == DEFINE && $arg1 == "$name" ]] ||
-           [[ $keyword == DEFINE && -n ${arg2:-} && $(resolve "$arg2" "$base") == "$src" ]]; then
+           [[ $keyword == DEFINE && -n ${arg2:-} && $(cdslib_resolve "$arg2" "$base") == "$src" ]]; then
             removed=$((removed + 1)); continue
-        fi
-        if [[ $keyword == SOFTINCLUDE || $keyword == INCLUDE ]] &&
-           [[ $(resolve "$arg1" "$base") == "$shared" ]]; then
-            included=1
         fi
         printf '%s\n' "$line" >> "$new"
     done < "$project_lib"

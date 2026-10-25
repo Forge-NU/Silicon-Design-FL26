@@ -10,12 +10,20 @@ checkout.
 
 ## Connect an existing project
 
-Projects created by `scripts/setup-sky130.py` after this change already have
-the line. For an older project, add it to the project's `cds.lib` once:
+Projects created before `analog/` existed do not load the shared libraries,
+so pulled libraries are on disk but missing from Virtuoso. Run this once
+after pulling; it updates every project in `~/forge-projects`:
 
 ```bash
-echo 'SOFTINCLUDE $HOME/Silicon-Design-FL26/analog/cds.lib' >> ~/forge-projects/sky130-9t/cds.lib
+cd ~/Silicon-Design-FL26
+git pull --ff-only
+bash scripts/connect-analog-libs.sh
 ```
+
+Pass a project folder to connect only that one, or `--dry-run` to preview.
+Each changed `cds.lib` is kept as `cds.lib.bak-<timestamp>`. Then restart
+Virtuoso, or run `ddUpdateLibList()` in the CIW. The launcher prints a
+reminder when a project is not connected yet.
 
 ## Move a library into the repository
 

@@ -68,6 +68,9 @@ case "$tool" in
             echo 'Forge EDA: Xvfb not found; ADE simulations will fail. Run scripts/bootstrap-xvfb.sh.' >&2
         fi
     fi
+    if [[ -f cds.lib ]] && ! grep -q 'analog/cds.lib' cds.lib; then
+        echo "Forge EDA: this project does not load the shared analog libraries; run: bash $forge_repo/scripts/connect-analog-libs.sh" >&2
+    fi
     # ADE, Pegasus and Quantus started from Virtuoso find their tools on PATH.
     export PATH="$vhome/bin:$vhome/tools/bin:$vhome/tools/dfII/bin:$FORGE_CADENCE_ROOT/SPECTRE251/bin:$FORGE_CADENCE_ROOT/PEGASUS251/bin:$FORGE_CADENCE_ROOT/QUANTUS261/bin:$PATH"
     # Virtuoso draws its GUI with a bundled Qt. The VLAB VNC desktop
