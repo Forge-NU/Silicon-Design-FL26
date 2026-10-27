@@ -3,4 +3,4 @@
 -- listed here appears in Library Manager. Paths are relative to this file.
 -- Add one line per library you put under analog/libs:
 --   DEFINE <LibName> libs/<LibName>
-DEFINE Forge_Analog libs/Forge_Analog
+#Removed by ddDeleteObj: DEFINE Forge_Analog libs/Forge_Analog
