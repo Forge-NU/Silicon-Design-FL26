@@ -4,3 +4,4 @@
 -- Add one line per library you put under analog/libs:
 --   DEFINE <LibName> libs/<LibName>
 DEFINE Forge_Analog libs/Forge_Analog
+DEFINE Luca_BGR libs/Luca_BGR
