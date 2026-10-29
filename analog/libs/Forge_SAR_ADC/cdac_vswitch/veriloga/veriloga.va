@@ -1,0 +1,26 @@
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module cdac_vswitch(A, B, CTRL, GND);
+
+	inout A, B, CTRL, GND;
+
+	electrical A, B, CTRL, GND;
+
+    parameter real ron = 10.0;
+    parameter real roff = 1e12;
+    parameter real vth = 0.9;
+
+    real resistance;
+
+    analog begin
+        if (V(CTRL, GND) > vth)
+            resistance = ron;
+        else
+            resistance = roff;
+
+        I(A, B) <+ V(A, B) / resistance;
+    end
+
+endmodule
