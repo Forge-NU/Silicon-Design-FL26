@@ -9,3 +9,4 @@ DEFINE Abood_SampleAndHold libs/Abood_SampleAndHold
 DEFINE Forge_SAR_ADC libs/Forge_SAR_ADC
 UNDEFINE forge_analog libs/forge_analog
 DEFINE forge_analog libs/forge_analog
+DEFINE Forge_analog1 libs/Forge_analog1
