@@ -1,0 +1,125 @@
+// Mixed-signal bench: the SystemVerilog controller ain_mux_ctrl drives the
+// transistor-level mux Matt_Mux/muxDiff2to1, which feeds an ideal S/H stand-in.
+// Sources follow the mux brief: ch0 = buffered T1 (0.9 V +/- 25 mV, 100 ohm),
+// ch1 = NTC bridge Thevenin (28.4k / 50k from 0.887 / 0.900 V) with 100 nF per node.
+// Each sample: precharge Cs to opposite rails, track 2 clocks (167 ns at 12 MHz),
+// hold, then check settling: the held differential voltage against the
+// sensor node just before the sample (ch0: the source; ch1: the 100 nF bridge
+// nodes, which drift ~58 uV per sample here because samples are ~1 us apart,
+// not 10 ms as in the system).
+`include "disciplines.vams"
+`timescale 1ns/1ps
+
+module tb_mux_diff2to1;
+    parameter real VDD_V = 1.8;
+    parameter real LSB_V = 2.0 * VDD_V / 4096.0;   // 12-bit, differential full scale
+    parameter real TOL_V = LSB_V / 2.0;            // spec: within 1/2 LSB at end of track
+    parameter real EMF0  = 0.925 - 0.875;          // ch0 differential source
+    parameter real EMF1  = 0.887 - 0.900;          // ch1 differential source
+
+    reg  clk = 1'b0, rst_n = 1'b0, ch_sel = 1'b0;
+    reg  pre_r = 1'b0, trk_r = 1'b0;
+    wire sh_pre = pre_r, sh_track = trk_r;         // a reg cannot drive a SPICE pin directly
+    wire sh_busy = pre_r | trk_r;                  // controller freezes for precharge + track
+    wire en0, en1, ch_now, ch_ready;
+
+    electrical vdda, vssa;
+    electrical s0p, s0n, in0p, in0n, s1p, s1n, in1p, in1n, outp, outn, hp, hn;
+    ground vssa;
+
+    vsource   #(.type("dc"), .dc(VDD_V)) VDD (vdda, vssa);
+    vsource   #(.type("dc"), .dc(0.925)) V0P (s0p, vssa);
+    vsource   #(.type("dc"), .dc(0.875)) V0N (s0n, vssa);
+    resistor  #(.r(100))                 R0P (s0p, in0p);
+    resistor  #(.r(100))                 R0N (s0n, in0n);
+    vsource   #(.type("dc"), .dc(0.887)) V1P (s1p, vssa);
+    vsource   #(.type("dc"), .dc(0.900)) V1N (s1n, vssa);
+    resistor  #(.r(28.4e3))              R1P (s1p, in1p);
+    resistor  #(.r(50e3))                R1N (s1n, in1n);
+    capacitor #(.c(100e-9))              C1P (in1p, vssa);
+    capacitor #(.c(100e-9))              C1N (in1n, vssa);
+
+    ain_mux_ctrl #(.DEAD(1), .SETTLE(2)) U_CTRL (
+        .clk(clk), .rst_n(rst_n), .ch_sel(ch_sel), .sh_track(sh_busy),
+        .en0(en0), .en1(en1), .ch_now(ch_now), .ch_ready(ch_ready));
+
+    muxDiff2to1 XMUX (
+        .in0p(in0p), .in0n(in0n), .in1p(in1p), .in1n(in1n),
+        .en0(en0), .en1(en1), .outp(outp), .outn(outn), .vdda(vdda), .vssa(vssa));
+
+    sh_standin XSH (
+        .inp(outp), .inn(outn), .hp(hp), .hn(hn),
+        .pre(sh_pre), .trk(sh_track), .vdd(vdda), .vss(vssa));
+
+    always #41.667 clk = ~clk;                     // 12 MHz
+
+    // Shown in SimVision as analog-looking real traces.
+    real    vheld, expected, err, max_err = 0.0, drift;
+    integer checks = 0, errors = 0;
+    realtime t_off;
+
+    // Break-before-make, measured on the digital enables.
+    always @(en0 or en1) begin
+        if (en0 && en1) begin
+            errors = errors + 1;
+            $display("%t: FAIL en0 and en1 both high", $realtime);
+        end
+        if (!en0 && !en1) t_off = $realtime;
+        else if (t_off > 0) $display("%t: channel %0d on after %0.1f ns with both off",
+                                     $realtime, en1, $realtime - t_off);
+    end
+
+    // One sample: precharge 1 clock, track 2 clocks, hold, read the held value.
+    // (Verilog-2001 syntax: a .vams file is not SystemVerilog.)
+    task sample;
+        input change_during_track;
+        reg ch;
+        begin
+            @(posedge clk);
+            while (!ch_ready) @(posedge clk);
+            ch = ch_now;
+            expected = ch ? $cds_get_analog_value("tb_mux_diff2to1.in1p") - $cds_get_analog_value("tb_mux_diff2to1.in1n")
+                          : EMF0;
+            drift = ch ? expected - EMF1 : 0.0;
+            pre_r <= 1'b1;
+            @(posedge clk) pre_r <= 1'b0;
+            @(posedge clk) trk_r <= 1'b1;
+            if (change_during_track) begin
+                ch_sel <= ~ch_sel;                 // the controller must wait for hold
+                $display("%t: request ch%0d while tracking (controller must defer)", $realtime, !ch_sel);
+            end
+            repeat (2) @(posedge clk);
+            trk_r <= 1'b0;
+            #5;                                    // just after the S/H opens
+            vheld    = $cds_get_analog_value("tb_mux_diff2to1.XSH.hp")
+                     - $cds_get_analog_value("tb_mux_diff2to1.XSH.hn");
+            err      = vheld - expected;
+            if (err < 0) err = -err;
+            if (err > max_err) max_err = err;
+            checks = checks + 1;
+            if (err > TOL_V || ch_now != ch) errors = errors + 1;   // ch_now must not change mid-track
+            $display("%t: ch%0d held %8.4f mV  node %8.4f mV  settling err %6.1f uV%s  (node drift from source %6.1f uV)",
+                     $realtime, ch, vheld * 1e3, expected * 1e3, err * 1e6,
+                     (err > TOL_V) ? "  <-- FAIL" : "", drift * 1e6);
+            repeat (8) @(posedge clk);             // conversion time
+        end
+    endtask
+
+    initial begin
+        $timeformat(-9, 1, " ns", 10);
+        t_off = 0;
+        repeat (3) @(posedge clk);
+        rst_n <= 1'b1;
+        sample(0); sample(0);                      // ch0 twice
+        ch_sel <= 1'b1; sample(0); sample(0);      // switch to ch1 (break-before-make)
+        ch_sel <= 1'b0; sample(0);                 // back to ch0
+        sample(1);                                 // request ch1 during this track
+        sample(0); sample(0);                      // the deferred switch happened in hold
+        if (errors == 0 && checks == 8)
+            $display("FORGE_TB_PASS mux_diff2to1 checks=%0d max_err=%0.1f uV (tol %0.1f uV)",
+                     checks, max_err * 1e6, TOL_V * 1e6);
+        else
+            $display("FORGE_TB_FAIL mux_diff2to1 errors=%0d of %0d checks", errors, checks);
+        $finish;
+    end
+endmodule

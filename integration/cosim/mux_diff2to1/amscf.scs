@@ -1,0 +1,18 @@
+// AMS control file for the mux bench: the analog side and how the domains meet.
+simulator lang=spectre
+
+include "models.scs"     // SKY130 models + temperature, written into the run directory by run.sh
+include "$FORGE_REPO/integration/netlists/Matt_Mux/muxDiff2to1.scs"
+include "$FORGE_REPO/integration/cosim/mux_diff2to1/sh_standin.scs"
+
+tran1 tran stop=40u      // longer than the testbench; its $finish ends the run
+
+amsd {
+  // Verilog instantiates the Spectre subckts by name, ports matched by name.
+  portmap subckt=muxDiff2to1
+  config  cell=muxDiff2to1 use=spice
+  portmap subckt=sh_standin
+  config  cell=sh_standin use=spice
+  // Connect modules for the 1.8 V logic (en0/en1, S/H pre/trk).
+  ie vsup=1.8 tr=100p tf=100p rlo=200 rhi=200 vthi=1.2 vtlo=0.6
+}

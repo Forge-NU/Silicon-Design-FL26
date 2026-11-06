@@ -1,0 +1,566 @@
+<?xml version="1.0"?>
+<setupdb version="7">maestro
+	<active>Active Setup
+		<jobcontrolmode>LSCS</jobcontrolmode>
+		<corners>
+			<corner enabled="1">_default</corner>
+			<corner enabled="1">ss_60
+				<vars>
+					<var>temperature
+						<value>60</value>
+					</var>
+				</vars>
+				<models>
+					<model>sky130.lib.spice
+						<modeltest>All</modeltest>
+						<modelblock>Global</modelblock>
+						<modelfile>/Users/Grad/mmarsicano/.local/share/forge-silicon/pdks/sky130_release_0.1.0/models/sky130.lib.spice</modelfile>
+						<modelsection>ss</modelsection>
+					</model>
+				</models>
+			</corner>
+			<corner enabled="1">ff_60
+				<vars>
+					<var>temperature
+						<value>60</value>
+					</var>
+				</vars>
+				<models>
+					<model>sky130.lib.spice
+						<modeltest>All</modeltest>
+						<modelblock>Global</modelblock>
+						<modelfile>/Users/Grad/mmarsicano/.local/share/forge-silicon/pdks/sky130_release_0.1.0/models/sky130.lib.spice</modelfile>
+						<modelsection>ff</modelsection>
+					</model>
+				</models>
+			</corner>
+			<corner enabled="1">sf_27
+				<vars>
+					<var>temperature
+						<value>27</value>
+					</var>
+				</vars>
+				<models>
+					<model>sky130.lib.spice
+						<modeltest>All</modeltest>
+						<modelblock>Global</modelblock>
+						<modelfile>/Users/Grad/mmarsicano/.local/share/forge-silicon/pdks/sky130_release_0.1.0/models/sky130.lib.spice</modelfile>
+						<modelsection>sf</modelsection>
+					</model>
+				</models>
+			</corner>
+			<corner enabled="1">fs_27
+				<vars>
+					<var>temperature
+						<value>27</value>
+					</var>
+				</vars>
+				<models>
+					<model>sky130.lib.spice
+						<modeltest>All</modeltest>
+						<modelblock>Global</modelblock>
+						<modelfile>/Users/Grad/mmarsicano/.local/share/forge-silicon/pdks/sky130_release_0.1.0/models/sky130.lib.spice</modelfile>
+						<modelsection>fs</modelsection>
+					</model>
+				</models>
+			</corner>
+			<corner enabled="1">ff_85
+				<vars>
+					<var>temperature
+						<value>85</value>
+					</var>
+				</vars>
+				<models>
+					<model>sky130.lib.spice
+						<modeltest>All</modeltest>
+						<modelblock>Global</modelblock>
+						<modelfile>/Users/Grad/mmarsicano/.local/share/forge-silicon/pdks/sky130_release_0.1.0/models/sky130.lib.spice</modelfile>
+						<modelsection>ff</modelsection>
+					</model>
+				</models>
+			</corner>
+		</corners>
+		<sharedvarinfo></sharedvarinfo>
+		<currentmode>Single Run, Sweeps and Corners</currentmode>
+		<overwritehistory>0</overwritehistory>
+		<tests>
+			<test>RON
+				<tool>ADE</tool>
+				<tooloptions>
+					<option>cell
+						<value>tb_muxDiff2to1</value>
+					</option>
+					<option>lib
+						<value>Matt_Mux</value>
+					</option>
+					<option>sim
+						<value>spectre</value>
+					</option>
+					<option>view
+						<value>schematic</value>
+					</option>
+					<option>path
+						<value>$AXL_SETUPDB_DIR</value>
+					</option>
+					<option>state
+						<value>active</value>
+					</option>
+				</tooloptions>
+				<vars>
+					<var>iron
+						<value>1u</value>
+					</var>
+					<var>vd0
+						<value>0</value>
+					</var>
+					<var>ac0
+						<value></value>
+					</var>
+					<var>ac1
+						<value></value>
+					</var>
+					<var>chold
+						<value></value>
+					</var>
+					<var>tnov
+						<value></value>
+					</var>
+					<var>trf
+						<value></value>
+					</var>
+					<var>tsw
+						<value></value>
+					</var>
+					<var>ttrack
+						<value></value>
+					</var>
+					<var>vcm
+						<value></value>
+					</var>
+					<var>vcm1
+						<value></value>
+					</var>
+					<var>vd1
+						<value></value>
+					</var>
+					<var>vdd
+						<value></value>
+					</var>
+				</vars>
+			</test>
+			<test>TRAN
+				<tool>ADE</tool>
+				<tooloptions>
+					<option>cell
+						<value>tb_muxDiff2to1</value>
+					</option>
+					<option>lib
+						<value>Matt_Mux</value>
+					</option>
+					<option>sim
+						<value>spectre</value>
+					</option>
+					<option>view
+						<value>schematic</value>
+					</option>
+					<option>path
+						<value>$AXL_SETUPDB_DIR</value>
+					</option>
+					<option>state
+						<value>active</value>
+					</option>
+				</tooloptions>
+				<vars>
+					<var>ac0
+						<value></value>
+					</var>
+					<var>ac1
+						<value></value>
+					</var>
+					<var>chold
+						<value></value>
+					</var>
+					<var>iron
+						<value></value>
+					</var>
+					<var>tnov
+						<value></value>
+					</var>
+					<var>trf
+						<value></value>
+					</var>
+					<var>tsw
+						<value></value>
+					</var>
+					<var>ttrack
+						<value></value>
+					</var>
+					<var>vcm
+						<value></value>
+					</var>
+					<var>vcm1
+						<value></value>
+					</var>
+					<var>vd0
+						<value></value>
+					</var>
+					<var>vd1
+						<value></value>
+					</var>
+					<var>vdd
+						<value></value>
+					</var>
+				</vars>
+			</test>
+			<test>AC
+				<tool>ADE</tool>
+				<tooloptions>
+					<option>cell
+						<value>tb_muxDiff2to1</value>
+					</option>
+					<option>lib
+						<value>Matt_Mux</value>
+					</option>
+					<option>sim
+						<value>spectre</value>
+					</option>
+					<option>view
+						<value>schematic</value>
+					</option>
+					<option>path
+						<value>$AXL_SETUPDB_DIR</value>
+					</option>
+					<option>state
+						<value>active</value>
+					</option>
+				</tooloptions>
+				<vars>
+					<var>ac0
+						<value>0.5</value>
+					</var>
+					<var>vd0
+						<value>0</value>
+					</var>
+					<var>ac1
+						<value></value>
+					</var>
+					<var>chold
+						<value></value>
+					</var>
+					<var>iron
+						<value></value>
+					</var>
+					<var>tnov
+						<value></value>
+					</var>
+					<var>trf
+						<value></value>
+					</var>
+					<var>tsw
+						<value></value>
+					</var>
+					<var>ttrack
+						<value></value>
+					</var>
+					<var>vcm
+						<value></value>
+					</var>
+					<var>vcm1
+						<value></value>
+					</var>
+					<var>vd1
+						<value></value>
+					</var>
+					<var>vdd
+						<value></value>
+					</var>
+				</vars>
+			</test>
+			<test>XTALK
+				<tool>ADE</tool>
+				<tooloptions>
+					<option>cell
+						<value>tb_muxDiff2to1</value>
+					</option>
+					<option>lib
+						<value>Matt_Mux</value>
+					</option>
+					<option>sim
+						<value>spectre</value>
+					</option>
+					<option>view
+						<value>schematic</value>
+					</option>
+					<option>path
+						<value>$AXL_SETUPDB_DIR</value>
+					</option>
+					<option>state
+						<value>active</value>
+					</option>
+				</tooloptions>
+				<vars>
+					<var>ac1
+						<value>0.5</value>
+					</var>
+					<var>vd0
+						<value>0</value>
+					</var>
+					<var>vd1
+						<value>0</value>
+					</var>
+					<var>ac0
+						<value></value>
+					</var>
+					<var>chold
+						<value></value>
+					</var>
+					<var>iron
+						<value></value>
+					</var>
+					<var>tnov
+						<value></value>
+					</var>
+					<var>trf
+						<value></value>
+					</var>
+					<var>tsw
+						<value></value>
+					</var>
+					<var>ttrack
+						<value></value>
+					</var>
+					<var>vcm
+						<value></value>
+					</var>
+					<var>vcm1
+						<value></value>
+					</var>
+					<var>vdd
+						<value></value>
+					</var>
+				</vars>
+			</test>
+		</tests>
+		<vars>
+			<var>vdd
+				<value>1.8</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>vref
+				<value>1.8</value>
+			</var>
+			<var>vcm
+				<value>0.9</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>vd0
+				<value>0.6</value>
+				<dependentTests>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+				</dependentTests>
+			</var>
+			<var>vcm1
+				<value>0.9</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>vd1
+				<value>-0.6</value>
+				<dependentTests>
+					<dependentTest omitted="0">XTALK</dependentTest>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+				</dependentTests>
+			</var>
+			<var>chold
+				<value>12.8p</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>iron
+				<value>0</value>
+				<dependentTests>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>ac0
+				<value>0</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>ac1
+				<value>0</value>
+				<dependentTests>
+					<dependentTest omitted="0">XTALK</dependentTest>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+				</dependentTests>
+			</var>
+			<var>tsw
+				<value>2u</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>tnov
+				<value>10n</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>trf
+				<value>1n</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+			<var>ttrack
+				<value>7.7u</value>
+				<dependentTests>
+					<dependentTest omitted="0">AC</dependentTest>
+					<dependentTest omitted="0">RON</dependentTest>
+					<dependentTest omitted="0">TRAN</dependentTest>
+					<dependentTest omitted="0">XTALK</dependentTest>
+				</dependentTests>
+			</var>
+		</vars>
+		<specs>
+			<spec>RON.Ron_max
+				<testname>RON</testname>
+				<resname>Ron_max</resname>
+				<specType>lt</specType>
+				<min></min>
+				<max>10k</max>
+				<target></target>
+				<tol></tol>
+			</spec>
+			<spec>RON.Ileak_off_max
+				<testname>RON</testname>
+				<resname>Ileak_off_max</resname>
+				<specType>lt</specType>
+				<min></min>
+				<max>100p</max>
+				<target></target>
+				<tol></tol>
+			</spec>
+			<spec>TRAN.settle_err_abs_LSB
+				<testname>TRAN</testname>
+				<resname>settle_err_abs_LSB</resname>
+				<specType>lt</specType>
+				<min></min>
+				<max>0.5</max>
+				<target></target>
+				<tol></tol>
+			</spec>
+			<spec>AC.BW_3dB
+				<testname>AC</testname>
+				<resname>BW_3dB</resname>
+				<specType>gt</specType>
+				<min>1M</min>
+				<max></max>
+				<target></target>
+				<tol></tol>
+			</spec>
+			<spec>XTALK.xtalk_1k_dB
+				<testname>XTALK</testname>
+				<resname>xtalk_1k_dB</resname>
+				<specType>lt</specType>
+				<min></min>
+				<max>-80</max>
+				<target></target>
+				<tol></tol>
+			</spec>
+			<spec>XTALK.xtalk_1M_dB
+				<testname>XTALK</testname>
+				<resname>xtalk_1M_dB</resname>
+				<specType>lt</specType>
+				<min></min>
+				<max>-40</max>
+				<target></target>
+				<tol></tol>
+			</spec>
+		</specs>
+		<extensions>
+			<extension>Parasitics
+				<callback>_parSetupDBExtensionCB</callback>
+				<iconvalue></iconvalue>
+				<icontype></icontype>
+			</extension>
+		</extensions>
+		<incrementalsimulationoptions>
+			<incrementalSimulation>0</incrementalSimulation>
+		</incrementalsimulationoptions>
+		<overwritehistoryname>Interactive.0</overwritehistoryname>
+		<plottingoptions>
+			<plottingoption>plottingmode
+				<value>Replace</value>
+			</plottingoption>
+			<plottingoption>plottype
+				<value>None</value>
+			</plottingoption>
+			<plottingoption>usewaveformtemplate
+				<value>no</value>
+			</plottingoption>
+			<plottingoption>useMaestroPlottingTemplate
+				<value>yes</value>
+			</plottingoption>
+			<plottingoption>waveformtemplate
+				<value></value>
+			</plottingoption>
+			<plottingoption>allplottingtemplates
+				<value></value>
+			</plottingoption>
+			<plottingoption>defaultplottingtemplate
+				<value></value>
+			</plottingoption>
+			<plottingoption>distributedplot_enabled
+				<value>no</value>
+			</plottingoption>
+		</plottingoptions>
+		<saveoptions>
+			<rdboption>default</rdboption>
+			<psfoption>default</psfoption>
+		</saveoptions>
+	</active>
+	<history>History
+	</history>
+</setupdb>

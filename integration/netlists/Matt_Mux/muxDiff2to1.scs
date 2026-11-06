@@ -1,0 +1,40 @@
+// Matt_Mux/muxDiff2to1/schematic, written by integration/netlists/export.sh on 2026-11-02.
+// Do not edit: change the cell in Virtuoso and export it again.
+simulator lang=spectre
+// Library name: Matt_Mux
+// Cell name: ain_tgdrv
+// View name: schematic
+subckt ain_tgdrv en on onb vdda vssa
+    MN2 (on onb vssa vssa) nfet_01v8 w=(1u) l=150n as=265f ad=265f \
+        ps=2.53u pd=2.53u m=(1)*(1)
+    MN1 (onb en vssa vssa) nfet_01v8 w=(1u) l=150n as=265f ad=265f \
+        ps=2.53u pd=2.53u m=(1)*(1)
+    MP2 (on onb vdda vdda) pfet_01v8 w=(2u) l=150n as=530f ad=530f \
+        ps=4.53u pd=4.53u m=(1)*(1)
+    MP1 (onb en vdda vdda) pfet_01v8 w=(2u) l=150n as=530f ad=530f \
+        ps=4.53u pd=4.53u m=(1)*(1)
+ends ain_tgdrv
+// End of subcircuit definition.
+
+// Library name: Matt_Mux
+// Cell name: ain_tg
+// View name: schematic
+subckt ain_tg a b on onb vdda vssa
+    MN (a on b vssa) nfet_01v8_lvt w=(4u) l=150n as=1.06p ad=1.06p \
+        ps=8.53u pd=8.53u m=(1)*(1)
+    MP (a onb b vdda) pfet_01v8_lvt w=(8u) l=350n as=2.12p ad=2.12p \
+        ps=16.53u pd=16.53u m=(1)*(1)
+ends ain_tg
+// End of subcircuit definition.
+
+// Library name: Matt_Mux
+// Cell name: muxDiff2to1
+// View name: schematic
+subckt muxDiff2to1 en0 en1 in0n in0p in1n in1p outn outp vdda vssa
+XD1 (en1 on1 onb1 vdda vssa) ain_tgdrv
+XD0 (en0 on0 onb0 vdda vssa) ain_tgdrv
+XTG1N (in1n outn on1 onb1 vdda vssa) ain_tg
+XTG0N (in0n outn on0 onb0 vdda vssa) ain_tg
+XTG1P (in1p outp on1 onb1 vdda vssa) ain_tg
+XTG0P (in0p outp on0 onb0 vdda vssa) ain_tg
+ends muxDiff2to1

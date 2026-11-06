@@ -1,0 +1,14 @@
+// S/H stand-in from the mux brief: ideal switches and 3.2 pF per side.
+// pre high: Cs p -> vdd, Cs n -> vss (worst-case opposite-rail precharge).
+// trk high: Cs connected to the mux outputs (track); low: hold.
+// Swap in Abood_SampleAndHold/SH (exported the same way) for a real S/H.
+simulator lang=spectre
+subckt sh_standin inp inn hp hn pre trk vdd vss
+parameters cs=3.2p
+    WPP (hp vdd pre vss) relay vt1=0.4 vt2=1.4 ropen=1T rclosed=1
+    WPN (hn vss pre vss) relay vt1=0.4 vt2=1.4 ropen=1T rclosed=1
+    WTP (inp hp trk vss) relay vt1=0.4 vt2=1.4 ropen=1T rclosed=1
+    WTN (inn hn trk vss) relay vt1=0.4 vt2=1.4 ropen=1T rclosed=1
+    CSP (hp vss) capacitor c=cs
+    CSN (hn vss) capacitor c=cs
+ends sh_standin
