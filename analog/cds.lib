@@ -10,3 +10,7 @@ DEFINE Forge_SAR_ADC libs/Forge_SAR_ADC
 UNDEFINE forge_analog libs/forge_analog
 DEFINE forge_analog libs/forge_analog
 DEFINE Forge_analog1 libs/Forge_analog1
+DEFINE Matt_Mux libs/Matt_Mux
+DEFINE Matt_TempSensor libs/Matt_TempSensor
+DEFINE CaeSAR_Top libs/CaeSAR_Top
+DEFINE itamar libs/itamar
