@@ -34,27 +34,9 @@
 					<var>v
 						<value></value>
 					</var>
-					<var>vsns
-						<value>0.350 0.352 0.354 0.355 0.356 0.358 0.360</value>
-					</var>
-					<var>vref
-						<value>0.355</value>
-					</var>
 				</vars>
 				<outputs>
 					<output>v("/OUT" ?result "dcOp")
-						<evalType>point</evalType>
-					</output>
-					<output>Vout
-						<evalType>point</evalType>
-					</output>
-					<output>A0_dB
-						<evalType>point</evalType>
-					</output>
-					<output>UGB
-						<evalType>point</evalType>
-					</output>
-					<output>Ph1
 						<evalType>point</evalType>
 					</output>
 				</outputs>
